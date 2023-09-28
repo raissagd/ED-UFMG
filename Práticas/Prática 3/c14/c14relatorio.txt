@@ -1,0 +1,125 @@
+1. Analise do código e detecção de erros:
+A variável fact não é inicializada explicitamente, o que pode resultar em um valor indeterminado 
+ao calcular o fatorial.
+
+3. Correção:
+A variável fact é inicializada com o valor 1 antes de ser usada no cálculo do fatorial, garantindo 
+que fact tenha um valor conhecido e apropriado para iniciar o cálculo.
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c14.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c14/c14.out
+Positive integer:5
+Factorial 5 = 3932040
+[Inferior 1 (process 490) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c14.out
+==500== Memcheck, a memory error detector
+==500== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==500== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==500== Command: ./c14.out
+==500==
+Positive integer:5
+==500== Conditional jump or move depends on uninitialised value(s)
+==500==    at 0x48C9958: __vfprintf_internal (vfprintf-internal.c:1687)
+==500==    by 0x48B3D3E: printf (printf.c:33)
+==500==    by 0x109204: main (c14.c:12)
+==500==
+==500== Use of uninitialised value of size 8
+==500==    at 0x48AD69B: _itoa_word (_itoa.c:179)
+==500==    by 0x48C9574: __vfprintf_internal (vfprintf-internal.c:1687)
+==500==    by 0x48B3D3E: printf (printf.c:33)
+==500==    by 0x109204: main (c14.c:12)
+==500==
+==500== Conditional jump or move depends on uninitialised value(s)
+==500==    at 0x48AD6AD: _itoa_word (_itoa.c:179)
+==500==    by 0x48C9574: __vfprintf_internal (vfprintf-internal.c:1687)
+==500==    by 0x48B3D3E: printf (printf.c:33)
+==500==    by 0x109204: main (c14.c:12)
+==500==
+==500== Conditional jump or move depends on uninitialised value(s)
+==500==    at 0x48CA228: __vfprintf_internal (vfprintf-internal.c:1687)
+==500==    by 0x48B3D3E: printf (printf.c:33)
+==500==    by 0x109204: main (c14.c:12)
+==500==
+==500== Conditional jump or move depends on uninitialised value(s)
+==500==    at 0x48C96EE: __vfprintf_internal (vfprintf-internal.c:1687)
+==500==    by 0x48B3D3E: printf (printf.c:33)
+==500==    by 0x109204: main (c14.c:12)
+==500==
+Factorial 5 = 3720
+==500==
+==500== HEAP SUMMARY:
+==500==     in use at exit: 0 bytes in 0 blocks
+==500==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==500==
+==500== All heap blocks were freed -- no leaks are possible
+==500==
+==500== Use --track-origins=yes to see where uninitialised values come from
+==500== For lists of detected and suppressed errors, rerun with: -s
+==500== ERROR SUMMARY: 11 errors from 5 contexts (suppressed: 0 from 0)
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c14correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c14/c14correto.out
+Positive integer:5
+Factorial 5 = 120
+[Inferior 1 (process 496) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+ valgrind --leak-check=full ./c14correto.out
+==501== Memcheck, a memory error detector
+==501== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==501== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==501== Command: ./c14correto.out
+==501==
+Positive integer:5
+Factorial 5 = 120
+==501==
+==501== HEAP SUMMARY:
+==501==     in use at exit: 0 bytes in 0 blocks
+==501==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==501==
+==501== All heap blocks were freed -- no leaks are possible
+==501==
+==501== For lists of detected and suppressed errors, rerun with: -s
+==501== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

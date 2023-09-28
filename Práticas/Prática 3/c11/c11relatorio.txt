@@ -1,0 +1,137 @@
+1. Analise do código e detecção de erros:
+Embora a memória seja alocada com malloc, não é liberada com free, resultando em um vazamento de memória.
+
+3. Correção:
+- A alocação de memória para msg é ajustada para acomodar uma string de 10 caracteres, 
+incluindo o caractere nulo de terminação '\0'.
+- Após a modificação da string em msg, a memória alocada é liberada com free(msg).
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c11.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c11/c11.out
+412, Rolberton
+[Inferior 1 (process 412) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+ valgrind --leak-check=full ./c11.out
+==422== Memcheck, a memory error detector
+==422== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==422== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==422== Command: ./c11.out
+==422==
+==422== Invalid write of size 2
+==422==    at 0x1091B4: main (c11.c:9)
+==422==  Address 0x4a47048 is 0 bytes after a block of size 8 alloc'd
+==422==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x10919E: main (c11.c:8)
+==422==
+==422== Invalid read of size 1
+==422==    at 0x483EF54: strlen (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x48CAD14: __vfprintf_internal (vfprintf-internal.c:1688)
+==422==    by 0x48B3D3E: printf (printf.c:33)
+==422==    by 0x1091DF: main (c11.c:11)
+==422==  Address 0x4a47048 is 0 bytes after a block of size 8 alloc'd
+==422==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x10919E: main (c11.c:8)
+==422==
+==422== Invalid read of size 1
+==422==    at 0x48E170C: _IO_new_file_xsputn (fileops.c:1219)
+==422==    by 0x48E170C: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
+==422==    by 0x48C90FB: __vfprintf_internal (vfprintf-internal.c:1688)
+==422==    by 0x48B3D3E: printf (printf.c:33)
+==422==    by 0x1091DF: main (c11.c:11)
+==422==  Address 0x4a47048 is 0 bytes after a block of size 8 alloc'd
+==422==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x10919E: main (c11.c:8)
+==422==
+==422== Invalid read of size 1
+==422==    at 0x48436A0: mempcpy (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x48E1631: _IO_new_file_xsputn (fileops.c:1236)
+==422==    by 0x48E1631: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
+==422==    by 0x48C90FB: __vfprintf_internal (vfprintf-internal.c:1688)
+==422==    by 0x48B3D3E: printf (printf.c:33)
+==422==    by 0x1091DF: main (c11.c:11)
+==422==  Address 0x4a47048 is 0 bytes after a block of size 8 alloc'd
+==422==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x10919E: main (c11.c:8)
+==422==
+422, Rolberton
+==422==
+==422== HEAP SUMMARY:
+==422==     in use at exit: 8 bytes in 1 blocks
+==422==   total heap usage: 2 allocs, 1 frees, 1,032 bytes allocated
+==422==
+==422== 8 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==422==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==422==    by 0x10919E: main (c11.c:8)
+==422==
+==422== LEAK SUMMARY:
+==422==    definitely lost: 8 bytes in 1 blocks
+==422==    indirectly lost: 0 bytes in 0 blocks
+==422==      possibly lost: 0 bytes in 0 blocks
+==422==    still reachable: 0 bytes in 0 blocks
+==422==         suppressed: 0 bytes in 0 blocks
+==422==
+==422== For lists of detected and suppressed errors, rerun with: -s
+==422== ERROR SUMMARY: 7 errors from 5 contexts (suppressed: 0 from 0)
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c11correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c11/c11correto.out
+418, Rolberton
+[Inferior 1 (process 418) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+$ valgrind --leak-check=full ./c11correto.out
+==423== Memcheck, a memory error detector
+==423== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==423== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==423== Command: ./c11correto.out
+==423==
+423, Rolberton
+==423==
+==423== HEAP SUMMARY:
+==423==     in use at exit: 0 bytes in 0 blocks
+==423==   total heap usage: 2 allocs, 2 frees, 1,034 bytes allocated
+==423==
+==423== All heap blocks were freed -- no leaks are possible
+==423==
+==423== For lists of detected and suppressed errors, rerun with: -s
+==423== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

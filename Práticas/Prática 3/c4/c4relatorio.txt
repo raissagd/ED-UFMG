@@ -1,0 +1,116 @@
+1. Analise do código e detecção de erros:
+No código não corrigido, o problema é que a cada iteração no loop 'for' estamos realizando
+uma alocação dinâmica de memória para a variável 'a' e no final não estamos desalocando toda 
+a memória que alocamos no loop, causando vazamento de memória no programa.
+
+3. Correção:
+Basta inserir o comando "free(a)" dentro do loop, para que seja possível desalocar toda a memória
+alocada a cada iteração.
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c4.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c4/c4.out
+
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000055555555517a in main () at c4.c:15
+15        rotation3D->rows=4;
+(gdb) next
+
+Program terminated with signal SIGSEGV, Segmentation fault.
+The program no longer exists.
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c4.out
+==138== Memcheck, a memory error detector
+==138== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==138== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==138== Command: ./c4.out
+==138==
+==138== Use of uninitialised value of size 8
+==138==    at 0x10917A: main (c4.c:15)
+==138==
+==138== Invalid write of size 4
+==138==    at 0x10917A: main (c4.c:15)
+==138==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==138==
+==138==
+==138== Process terminating with default action of signal 11 (SIGSEGV)
+==138==  Access not within mapped region at address 0x0
+==138==    at 0x10917A: main (c4.c:15)
+==138==  If you believe this happened as a result of a stack
+==138==  overflow in your program's main thread (unlikely but
+==138==  possible), you can try to increase the size of the
+==138==  main thread stack using the --main-stacksize= flag.
+==138==  The main thread stack size used in this run was 8388608.
+==138==
+==138== HEAP SUMMARY:
+==138==     in use at exit: 0 bytes in 0 blocks
+==138==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==138==
+==138== All heap blocks were freed -- no leaks are possible
+==138==
+==138== Use --track-origins=yes to see where uninitialised values come from
+==138== For lists of detected and suppressed errors, rerun with: -s
+==138== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+Segmentation fault
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c4correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c4/c4correto.out
+[Inferior 1 (process 133) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+$ valgrind --leak-check=full ./c4correto.out
+==137== Memcheck, a memory error detector
+==137== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==137== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==137== Command: ./c4correto.out
+==137==
+==137==
+==137== HEAP SUMMARY:
+==137==     in use at exit: 0 bytes in 0 blocks
+==137==   total heap usage: 6 allocs, 6 frees, 112 bytes allocated
+==137==
+==137== All heap blocks were freed -- no leaks are possible
+==137==
+==137== For lists of detected and suppressed errors, rerun with: -s
+==137== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

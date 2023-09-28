@@ -1,0 +1,172 @@
+1. Analise do código e detecção de erros:
+No código não corrigido, ele cria um loop infinito onde a alocação de memória 
+é feita repetidamente sem a liberação correspondente. Novos blocos de memória são alocados, mas nunca são liberados.
+
+3. Correção:
+A correção foi realizada da seguinte forma:
+    - O loop foi ajustado para iterar 10 vezes, onde a alocação de memória e a liberação correspondente são 
+    realizadas dentro do loop.
+    - Após a alocação de memória, o bloco alocado é liberado com free(p).
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from [32m./c10.out[m...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c10/c10.out 
+93824992252576
+93824992253760
+93824992253904
+93824992254048
+93824992254192
+93824992254336
+93824992254480
+93824992254624
+93824992254768
+93824992254912
+
+... loop infinito
+
+9382499570^C
+Program received signal SIGINT, Interrupt.
+[34m0x00007ffff7edc077[m in [33m__GI___libc_write[m ([36mfd[m=1, [36mbuf[m=0x555555559330, [36mnbytes[m=15) at [32m../sysdeps/unix/sysv/linux/write.c[m:26
+26	../sysdeps/unix/sysv/linux/write.c: No such file or directory.
+(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 384] will be killed.
+
+Quit anyway? (y or n) y
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+==389== Memcheck, a memory error detector
+==389== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==389== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==389== Command: ./c10.out
+==389== 
+77885504
+77886784
+77886976
+77887168
+77887360
+77887552
+77887744
+77887936
+77888128
+77888320
+
+... loop infinito
+
+80810560
+80810752
+^C==389== 
+==389== Process terminating with default action of signal 2 (SIGINT)
+==389==    at 0x4960075: write (write.c:26)
+==389==    by 0x48E0E8C: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1181)
+==389==    by 0x48E2950: new_do_write (fileops.c:449)
+==389==    by 0x48E2950: _IO_new_do_write (fileops.c:426)
+==389==    by 0x48E2950: _IO_do_write@@GLIBC_2.2.5 (fileops.c:423)
+==389==    by 0x48E16B4: _IO_new_file_xsputn (fileops.c:1244)
+==389==    by 0x48E16B4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
+==389==    by 0x48C8FE5: __vfprintf_internal (vfprintf-internal.c:1719)
+==389==    by 0x48B3D3E: printf (printf.c:33)
+==389==    by 0x10919A: main (c10.c:10)
+80810944
+==389== 
+==389== HEAP SUMMARY:
+==389==     in use at exit: 1,949,696 bytes in 15,232 blocks
+==389==   total heap usage: 15,233 allocs, 1 frees, 1,950,720 bytes allocated
+==389== 
+==389== 1,949,568 bytes in 15,231 blocks are definitely lost in loss record 2 of 2
+==389==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==389==    by 0x10917E: main (c10.c:9)
+==389== 
+==389== LEAK SUMMARY:
+==389==    definitely lost: 1,949,568 bytes in 15,231 blocks
+==389==    indirectly lost: 0 bytes in 0 blocks
+==389==      possibly lost: 0 bytes in 0 blocks
+==389==    still reachable: 128 bytes in 1 blocks
+==389==         suppressed: 0 bytes in 0 blocks
+==389== Reachable blocks (those to which a pointer was found) are not shown.
+==389== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==389== 
+==389== For lists of detected and suppressed errors, rerun with: -s
+==389== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+]0;raissagd@DESKTOP-1TAHK6J: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c10[01;32mraissagd@DESKTOP-1TAHK6J[00m:[01;34m/mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c10[00m$ exit
+exit
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c10correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c10/c10correto.out
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+93824992252576
+[Inferior 1 (process 351) exited normally]
+(gdb) quir
+Undefined command: "quir".  Try "help".
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+==347== Memcheck, a memory error detector
+==347== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==347== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==347== Command: ./c10correto.out
+==347==
+77885504
+77886784
+77886976
+77887168
+77887360
+77887552
+77887744
+77887936
+77888128
+77888320
+==347==
+==347== HEAP SUMMARY:
+==347==     in use at exit: 0 bytes in 0 blocks
+==347==   total heap usage: 11 allocs, 11 frees, 2,304 bytes allocated
+==347==
+==347== All heap blocks were freed -- no leaks are possible
+==347==
+==347== For lists of detected and suppressed errors, rerun with: -s
+==347== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

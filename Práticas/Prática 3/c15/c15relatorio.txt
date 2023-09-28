@@ -1,0 +1,90 @@
+1. Analise do código e detecção de erros:
+A variável (a) está sendo declarada dentro do loop for, o que significa que ela é 
+recriada a cada iteração do loop.
+
+3. Correção:
+A variável (a) é declarada fora do loop for, o que significa que ela é criada uma vez e 
+reutilizada em cada iteração do loop.
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c15.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c15/c15.out
+[Inferior 1 (process 517) exited with code 01]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c15.out
+==527== Memcheck, a memory error detector
+==527== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==527== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==527== Command: ./c15.out
+==527==
+==527==
+==527== HEAP SUMMARY:
+==527==     in use at exit: 0 bytes in 0 blocks
+==527==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==527==
+==527== All heap blocks were freed -- no leaks are possible
+==527==
+==527== For lists of detected and suppressed errors, rerun with: -s
+==527== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+$ gdb ./c15correto.out
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c15correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c15/c15correto.out
+[Inferior 1 (process 523) exited with code 01]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+$ valgrind --leak-check=full ./c15correto.out
+==528== Memcheck, a memory error detector
+==528== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==528== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==528== Command: ./c15correto.out
+==528==
+==528==
+==528== HEAP SUMMARY:
+==528==     in use at exit: 0 bytes in 0 blocks
+==528==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==528==
+==528== All heap blocks were freed -- no leaks are possible
+==528==
+==528== For lists of detected and suppressed errors, rerun with: -s
+==528== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

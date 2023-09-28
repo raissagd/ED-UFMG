@@ -1,0 +1,135 @@
+1. Analise do código e detecção de erros:
+A variável (buf) é usada sem ter sido alocada dinamicamente e sem ter sido liberada.
+
+3. Correção:
+A variável (buf) é alocada dinamicamente com base no tamanho necessário usando malloc, e, após, 
+a memória alocada é liberada com free(buf).
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+$ gdb ./c19.out
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c19.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c19/c19.out
+enter a number:
+5
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00007ffff7e61ae7 in __GI__IO_str_overflow (fp=0x7fffffffdd90, c=115)
+    at strops.c:133
+133     strops.c: No such file or directory.
+(gdb) next
+
+Program terminated with signal SIGSEGV, Segmentation fault.
+The program no longer exists.
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c19.out
+==580== Memcheck, a memory error detector
+==580== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==580== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==580== Command: ./c19.out
+==580==
+enter a number:
+5
+==580== Invalid write of size 1
+==580==    at 0x48E5AE7: _IO_str_overflow (strops.c:133)
+==580==    by 0x48E4023: _IO_default_xsputn (genops.c:399)
+==580==    by 0x48E4023: _IO_default_xsputn (genops.c:370)
+==580==    by 0x48C8971: __vfprintf_internal (vfprintf-internal.c:1373)
+==580==    by 0x48D70F8: __vsprintf_internal (iovsprintf.c:95)
+==580==    by 0x48B3EC7: sprintf (sprintf.c:30)
+==580==    by 0x10929C: printSum (c19.c:22)
+==580==    by 0x1092D4: main (c19.c:28)
+==580==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==580==
+==580==
+==580== Process terminating with default action of signal 11 (SIGSEGV)
+==580==  Access not within mapped region at address 0x0
+==580==    at 0x48E5AE7: _IO_str_overflow (strops.c:133)
+==580==    by 0x48E4023: _IO_default_xsputn (genops.c:399)
+==580==    by 0x48E4023: _IO_default_xsputn (genops.c:370)
+==580==    by 0x48C8971: __vfprintf_internal (vfprintf-internal.c:1373)
+==580==    by 0x48D70F8: __vsprintf_internal (iovsprintf.c:95)
+==580==    by 0x48B3EC7: sprintf (sprintf.c:30)
+==580==    by 0x10929C: printSum (c19.c:22)
+==580==    by 0x1092D4: main (c19.c:28)
+==580==  If you believe this happened as a result of a stack
+==580==  overflow in your program's main thread (unlikely but
+==580==  possible), you can try to increase the size of the
+==580==  main thread stack using the --main-stacksize= flag.
+==580==  The main thread stack size used in this run was 8388608.
+==580==
+==580== HEAP SUMMARY:
+==580==     in use at exit: 0 bytes in 0 blocks
+==580==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==580==
+==580== All heap blocks were freed -- no leaks are possible
+==580==
+==580== For lists of detected and suppressed errors, rerun with: -s
+==580== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+Segmentation fault
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c19correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c19/c19correto.out
+enter a number:
+5
+sum=15
+[Inferior 1 (process 574) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+$ valgrind --leak-check=full ./c19correto.out
+==581== Memcheck, a memory error detector
+==581== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==581== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==581== Command: ./c19correto.out
+==581==
+enter a number:
+5
+sum=15
+==581==
+==581== HEAP SUMMARY:
+==581==     in use at exit: 0 bytes in 0 blocks
+==581==   total heap usage: 3 allocs, 3 frees, 2,055 bytes allocated
+==581==
+==581== All heap blocks were freed -- no leaks are possible
+==581==
+==581== For lists of detected and suppressed errors, rerun with: -s
+==581== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

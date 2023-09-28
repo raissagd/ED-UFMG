@@ -1,0 +1,93 @@
+1. Analise do código e detecção de erros:
+A variável x é usada em uma condição if(x == 0) antes de ser inicializada, 
+o que pode resultar em um comportamento indefinido, pois o valor de x não é conhecido.
+
+3. Correção:
+A variável x é inicializada com o valor 0 antes de ser usada na condição if(x == 0), garantindo
+que x tenha um valor definido antes de ser usado em uma expressão condicional.
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c12.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c12/c12.out
+X is zero[Inferior 1 (process 439) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c12.out
+==449== Memcheck, a memory error detector
+==449== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==449== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==449== Command: ./c12.out
+==449==
+==449== Conditional jump or move depends on uninitialised value(s)
+==449==    at 0x109159: main (c12.c:6)
+==449==
+X is zero==449==
+==449== HEAP SUMMARY:
+==449==     in use at exit: 0 bytes in 0 blocks
+==449==   total heap usage: 1 allocs, 1 frees, 1,024 bytes allocated
+==449==
+==449== All heap blocks were freed -- no leaks are possible
+==449==
+==449== Use --track-origins=yes to see where uninitialised values come from
+==449== For lists of detected and suppressed errors, rerun with: -s
+==449== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c12correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c12/c12correto.out
+X is zero[Inferior 1 (process 445) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+ $ valgrind --leak-check=full ./c12correto.out
+==450== Memcheck, a memory error detector
+==450== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==450== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==450== Command: ./c12correto.out
+==450==
+X is zero==450==
+==450== HEAP SUMMARY:
+==450==     in use at exit: 0 bytes in 0 blocks
+==450==   total heap usage: 1 allocs, 1 frees, 1,024 bytes allocated
+==450==
+==450== All heap blocks were freed -- no leaks are possible
+==450==
+==450== For lists of detected and suppressed errors, rerun with: -s
+==450== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

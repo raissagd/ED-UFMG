@@ -1,0 +1,105 @@
+1. Analise do código e detecção de erros:
+A função (actual_calc) realiza uma divisão por zero (c=a/b;) sem verificar se b é zero ou não. 
+Isso pode levar a um erro de tempo de execução e causar comportamento indefinido.
+
+3. Correção:
+Dentro da função (actual_calc), é adicionada uma verificação para garantir que b não seja zero antes 
+de realizar a divisão.
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c16.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c16/c16.out
+
+Program received signal SIGFPE, Arithmetic exception.
+0x000055555555513b in actual_calc (a=13, b=0) at c16.c:6
+6         c=a/b;
+(gdb) quit
+A debugging session is active.
+
+        Inferior 1 [process 543] will be killed.
+
+Quit anyway? (y or n) y
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c16.out
+==553== Memcheck, a memory error detector
+==553== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==553== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==553== Command: ./c16.out
+==553==
+==553==
+==553== Process terminating with default action of signal 8 (SIGFPE)
+==553==  Integer divide by zero at address 0x1002D47EFF
+==553==    at 0x10913B: actual_calc (c16.c:6)
+==553==    by 0x109170: calc (c16.c:15)
+==553==    by 0x109189: main (c16.c:20)
+==553==
+==553== HEAP SUMMARY:
+==553==     in use at exit: 0 bytes in 0 blocks
+==553==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==553==
+==553== All heap blocks were freed -- no leaks are possible
+==553==
+==553== For lists of detected and suppressed errors, rerun with: -s
+==553== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Floating point exception
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+$ gdb ./c16correto.out
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c16correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c16/c16correto.out
+[Inferior 1 (process 549) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+ valgrind --leak-check=full ./c16correto.out
+==554== Memcheck, a memory error detector
+==554== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==554== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==554== Command: ./c16correto.out
+==554==
+==554==
+==554== HEAP SUMMARY:
+==554==     in use at exit: 0 bytes in 0 blocks
+==554==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==554==
+==554== All heap blocks were freed -- no leaks are possible
+==554==
+==554== For lists of detected and suppressed errors, rerun with: -s
+==554== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

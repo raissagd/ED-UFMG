@@ -1,0 +1,102 @@
+1. Analise do código e detecção de erros:
+O programa tenta acessar intArray[10], que é a 11ª posição em um array alocado com espaço para apenas
+10 elementos (índices 0 a 9). Além disso, o programa não libera a memória alocada para intArray, resultando 
+em um vazamento de memória.
+
+3. Correção:
+Devemos fazer a desalocação de memória do intArray ao final do programa, utilizando a função free(intArray);
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c5.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c5/c5.out
+intArray[513]: 513
+[Inferior 1 (process 152) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+$ valgrind --leak-check=full ./c5.out
+==162== Memcheck, a memory error detector
+==162== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==162== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==162== Command: ./c5.out
+==162==
+intArray[239]: 239
+==162==
+==162== HEAP SUMMARY:
+==162==     in use at exit: 4,000 bytes in 1 blocks
+==162==   total heap usage: 2 allocs, 1 frees, 5,024 bytes allocated
+==162==
+==162== 4,000 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==162==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==162==    by 0x1091E7: main (c5.c:9)
+==162==
+==162== LEAK SUMMARY:
+==162==    definitely lost: 4,000 bytes in 1 blocks
+==162==    indirectly lost: 0 bytes in 0 blocks
+==162==      possibly lost: 0 bytes in 0 blocks
+==162==    still reachable: 0 bytes in 0 blocks
+==162==         suppressed: 0 bytes in 0 blocks
+==162==
+==162== For lists of detected and suppressed errors, rerun with: -s
+==162== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c5correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c5/c5correto.out
+intArray[422]: 422
+[Inferior 1 (process 158) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+$ valgrind --leak-check=full ./c5correto.out
+==163== Memcheck, a memory error detector
+==163== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==163== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==163== Command: ./c5correto.out
+==163==
+intArray[897]: 897
+==163==
+==163== HEAP SUMMARY:
+==163==     in use at exit: 0 bytes in 0 blocks
+==163==   total heap usage: 2 allocs, 2 frees, 5,024 bytes allocated
+==163==
+==163== All heap blocks were freed -- no leaks are possible
+==163==
+==163== For lists of detected and suppressed errors, rerun with: -s
+==163== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

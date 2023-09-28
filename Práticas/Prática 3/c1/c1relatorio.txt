@@ -1,0 +1,98 @@
+1. Analise do código e detecção de erros:
+No código não corrigido, o programa tenta acessar o espaço de memória para a[10], que é a 11ª posição em 
+um array alocado com espaço para apenas 10 elementos (índices 0 a 9). 
+
+3. Correção:
+O código foi corrigido definindo o limite do loop para i < 10. Agora, o programa itera apenas até a 9ª 
+posição do array, que é a última posição válida, evitando  assim o acesso indevido à memória.
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo defeituoso:
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c1.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c1/c1.out
+[Inferior 1 (process 62) exited normally]
+(gdb) exit
+Undefined command: "exit".  Try "help".
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo defeituoso:
+valgrind --leak-check=full ./c1.out
+==66== Memcheck, a memory error detector
+==66== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==66== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==66== Command: ./c1.out
+==66==
+==66== Invalid write of size 4
+==66==    at 0x1091B8: main (c1.c:9)
+==66==  Address 0x4a47068 is 0 bytes after a block of size 40 alloc'd
+==66==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==66==    by 0x109185: main (c1.c:6)
+==66==
+==66==
+==66== HEAP SUMMARY:
+==66==     in use at exit: 0 bytes in 0 blocks
+==66==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
+==66==
+==66== All heap blocks were freed -- no leaks are possible
+==66==
+==66== For lists of detected and suppressed errors, rerun with: -s
+==66== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+-------------------------------------------------------------------------
+-> Retorno do GDB no arquivo corrigido:
+gdb ./c1correto.out
+GNU gdb (Ubuntu 9.2-0ubuntu1~20.04.1) 9.2
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./c1correto.out...
+(gdb) run
+Starting program: /mnt/c/Users/Acer/Documents/2023-02/ED/Prática 3/c1/c1correto.out
+[Inferior 1 (process 76) exited normally]
+(gdb) quit
+
+-------------------------------------------------------------------------
+-> Retorno do Valgrind no arquivo corrigido:
+ valgrind --leak-check=full ./c1correto.out
+==80== Memcheck, a memory error detector
+==80== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==80== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==80== Command: ./c1correto.out
+==80==
+==80==
+==80== HEAP SUMMARY:
+==80==     in use at exit: 0 bytes in 0 blocks
+==80==   total heap usage: 1 allocs, 1 frees, 40 bytes allocated
+==80==
+==80== All heap blocks were freed -- no leaks are possible
+==80==
+==80== For lists of detected and suppressed errors, rerun with: -s
+==80== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
