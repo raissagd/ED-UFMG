@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : stringVector.hpp
+// Conteudo     : arquivo de cabeçario de stringVector.cpp
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 23/09/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #ifndef STRINGVECTOR_HPP
 #define STRINGVECTOR_HPP
 

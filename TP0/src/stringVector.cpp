@@ -1,7 +1,14 @@
+//---------------------------------------------------------------------
+// Arquivo      : stringVector.cpp
+// Conteudo     : Implementacao do vetor de strings
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 26/09/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #include "StringVector.hpp"
 
 // Construtor 
-StringVector::StringVector() : size(0), capacity(10000) {
+StringVector::StringVector() : size(0), capacity(1000) {
     data = new std::string[capacity];
 }
 

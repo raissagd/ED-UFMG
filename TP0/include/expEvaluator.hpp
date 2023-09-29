@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : expEvaluator.hpp
+// Conteudo     : arquivo de cabeçario de expEvaluator.hpp
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 23/09/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #ifndef EXP_EVALUATOR_HPP
 #define EXP_EVALUATOR_HPP
 

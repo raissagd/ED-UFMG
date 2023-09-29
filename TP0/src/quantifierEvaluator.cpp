@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : quantifierEvaluator.cpp
+// Conteudo     : Implementacao da lógica para avaliar expressões com quantificadores
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 23/09/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #include "QuantifierEvaluator.hpp"
 
 // Função para calcular todos os possíveis resultados binários, dado n quantificadores

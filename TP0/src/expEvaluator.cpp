@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : expEvaluator.cpp
+// Conteudo     : Implementacao da lógica para avaliar uma expressão dada uma valoração
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 23/09/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #include <iostream>
 #include "ExpEvaluator.hpp"
 

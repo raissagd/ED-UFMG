@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : quantifierEvaluator.hpp
+// Conteudo     : arquivo de cabeçario de quantifierEvaluator.hpp
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 23/09/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #ifndef QUANTIFIEREVALUATOR_HPP
 #define QUANTIFIEREVALUATOR_HPP
 
