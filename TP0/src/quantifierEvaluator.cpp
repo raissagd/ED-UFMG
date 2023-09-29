@@ -151,7 +151,6 @@ std::string QuantifierEvaluator::calculateResult(std::string formula, std::strin
         // Encontra e avalia os resultados com um valor de 1
         ExpEvaluator obj;
         StringVector outcomes = generateOutcomes(formula, valuation);
-        StringVector totalOutcomes;
 
         // Cria uma cópia da expressão para trabalhar com ela
         std::string modifiedExpression = expression;
@@ -185,22 +184,42 @@ std::string QuantifierEvaluator::calculateResult(std::string formula, std::strin
             finalResult = "0";
         } else {
             finalResult = "1";
-            
-            // Concatena as linhas de outcomes onde o evaluationResult correspondente é igual a 1
-            std::string outcomesConcatenated = "";
-            for (size_t i = 0; i < outcomes.getSize(); ++i) {
-                if (evaluationResults[i] == "1") {
-                    outcomesConcatenated += outcomes[i] + " ";
+
+            // Check if all values in evaluationResults are equal to "1"
+            bool allOnes = true;
+            for (size_t i = 0; i < evaluationResults.getSize(); ++i) {
+                if (evaluationResults[i] != "1") {
+                    allOnes = false;
+                    break;
                 }
             }
 
-            // Remove o espaço final se houver algum outcome
-            if (!outcomesConcatenated.empty()) {
-                outcomesConcatenated.pop_back();
-            }
+            if (allOnes) {
+                // Replace 'e's or 'a's with 'w' in the valuation string
+                for (size_t c = 0; c < valuation.length(); ++c) {
+                    if (valuation[c] == 'e' || valuation[c] == 'a') {
+                        valuation[c] = 'a';
+                    }
+                }
+                finalResult += " " + valuation;
+                
+            } else {
+                // Concatenate the lines from outcomes where the corresponding evaluationResult is equal to 1
+                std::string outcomesConcatenated = "";
+                for (size_t i = 0; i < outcomes.getSize(); ++i) {
+                    if (evaluationResults[i] == "1") {
+                        outcomesConcatenated += outcomes[i] + " ";
+                    }
+                }
 
-            // Anexa os outcomes concatenados a finalResult
-            finalResult += " " + outcomesConcatenated;
+                // Remove the trailing space if there is any outcome
+                if (!outcomesConcatenated.empty()) {
+                    outcomesConcatenated.pop_back();
+                }
+
+                // Append the concatenated outcomes to finalResult
+                finalResult += " " + outcomesConcatenated;
+            }
         }
 
         return finalResult;
