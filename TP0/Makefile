@@ -8,7 +8,7 @@ OBJS = $(OBJ)/stacks.o $(OBJ)/stringVector.o $(OBJ)/expEvaluator.o $(OBJ)/quanti
 HDRS = $(INC)/stacks.hpp $(INC)/stringVector.hpp $(INC)/expEvaluator.hpp $(INC)/quantifierEvaluator.hpp
 CFLAGS = -Wall -pg -c -I$(INC)
 
-EXE = $(BIN_DIR)/main
+EXE = $(BIN_DIR)/tp1.out
 
 all: $(EXE)
 

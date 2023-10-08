@@ -4,8 +4,7 @@
 // Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
 // Historico    : 23/09/2023 - arquivo criado
 //---------------------------------------------------------------------
-
-#include "QuantifierEvaluator.hpp"
+#include "quantifierEvaluator.hpp"
 
 // Função para calcular todos os possíveis resultados binários, dado n quantificadores
 StringVector QuantifierEvaluator::generateOutcomes(std::string formula, std::string& valuation) {

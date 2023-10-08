@@ -11,9 +11,9 @@
 #include <string>
 #include <cmath>
 #include <iostream>
-#include "Stacks.hpp"
-#include "StringVector.hpp"
-#include "ExpEvaluator.hpp"
+#include "stacks.hpp"
+#include "stringVector.hpp"
+#include "expEvaluator.hpp"
 
 // Classe que lida com a avaliação de uma expressão quando há quantificadores
 class QuantifierEvaluator {

@@ -6,7 +6,7 @@
 //---------------------------------------------------------------------
 
 #include <iostream>
-#include "ExpEvaluator.hpp"
+#include "expEvaluator.hpp"
 
 int ExpEvaluator::evaluate(std::string option, std::string exp, std::string values) {
     int variableValues[100]; // Supondo que pode haver até 100 variáveis (0 a 99)

@@ -11,8 +11,8 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-#include "Stacks.hpp"
-#include "StringVector.hpp"
+#include "stacks.hpp"
+#include "stringVector.hpp"
 
 // Classe que lida com a avaliação de uma expressão
 class ExpEvaluator {

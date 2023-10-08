@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <string>
-#include "ExpEvaluator.hpp"
-#include "QuantifierEvaluator.hpp"
+#include "expEvaluator.hpp"
+#include "quantifierEvaluator.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc < 4) {
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
         try {
             int result = obj.evaluate("noQuant", formula, valuation); // chama a função para avaliar a expressão
-            std::cout << "Result: " << result << std::endl;
+            std::cout << result << std::endl;
         } catch (const std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         QuantifierEvaluator obj;
 
         std::string result = obj.calculateResult(formula, valuation); // chama a função para avaliar a expressão com quantificadores
-        std::cout << "Result: " << result << std::endl;
+        std::cout << result << std::endl;
 
     } else {
         std::cerr << "Opção inválida. Exemplo de entrada: ./bin/main -a '0 | 1 & 2' 010" << std::endl;

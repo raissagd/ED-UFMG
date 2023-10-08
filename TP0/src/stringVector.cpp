@@ -5,7 +5,7 @@
 // Historico    : 26/09/2023 - arquivo criado
 //---------------------------------------------------------------------
 
-#include "StringVector.hpp"
+#include "stringVector.hpp"
 
 // Construtor 
 StringVector::StringVector() : size(0), capacity(1000) {
