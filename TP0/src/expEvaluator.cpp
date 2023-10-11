@@ -53,8 +53,25 @@ int ExpEvaluator::evaluate(std::string option, std::string exp, std::string valu
             // Lidar com o caractere ')'
             handleClosingParenthesis(operands, operations);
         } else if (isOperator(c)) {
-            // Lidar com operadores lógicos
-            handleOperator(c, operands, operations);
+            // Lidar com operadores lógicos, incluindo negação
+            if (c == '~') {
+                // Verifica a negação lógica repetida
+                int negationCount = 0;
+                while (i < exp.length() && (exp[i] == '~' || isspace(exp[i]))) {
+                    if (exp[i] == '~') {
+                        negationCount++;
+                    }
+                    i++;
+                }
+                i--;
+
+                // Se o número de negações for ímpar, consideramos uma negação
+                if (negationCount % 2 == 1) {
+                    handleOperator('~', operands, operations);
+                }
+            } else {
+                handleOperator(c, operands, operations);
+            }
         }
     }
 
@@ -127,7 +144,8 @@ int ExpEvaluator::performOperation(NumStack& operands, CharStack& operations) {
     operations.pop();
 
     if (operation == '~') {
-        return !a; // Operação de negação lógica
+        // Avalia a negação lógica da expressão após o operador '~'
+        return !a;
     }
 
     int b = operands.peek();
@@ -141,6 +159,7 @@ int ExpEvaluator::performOperation(NumStack& operands, CharStack& operations) {
 
     throw std::runtime_error("Operador desconhecido: " + operation);
 }
+
 
 int ExpEvaluator::precedence(char c) {
     switch (c) {
