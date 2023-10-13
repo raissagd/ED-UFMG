@@ -5,7 +5,7 @@
 // Historico    : 23/09/2023 - arquivo criado
 //---------------------------------------------------------------------
 
-#include "../include/stacks.hpp"
+#include "stacks.hpp"
 
 // ----------- Pilha encadeada para caracteres ----------- //
 

@@ -11,22 +11,19 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-#include "../include/binaryTree.hpp"
-#include "../include/stacks.hpp"
+#include "stacks.hpp"
+#include "stringVector.hpp"
 
-// Classe que lida com a avaliação de uma expressão (lógica simples ou com quantificadores)
+// Classe que lida com a avaliação de uma expressão
 class ExpEvaluator {
 public:
-    // Função principal para avaliar uma expressão lógica com base em uma valoração
-    static int evaluate(std::string exp, std::string values);
+    // Avalia uma expressão lógica com base em uma valoração
+    static int evaluate(std::string option, std::string exp, std::string values);
 
-    // Função principal para avaliar uma expressão lógica com quantificadores
-    void satisfabilitiyCheck(std::string expression, std::string valuation);
-
-private:
     // Conta o número de variáveis na expressão
     static int countVariables(const std::string& exp);
 
+private:
     // Inicializa os valores das variáveis com base na valoração
     static void initializeVariableValues(const std::string& values, int variableValues[]);
 

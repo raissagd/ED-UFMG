@@ -8,7 +8,7 @@
 #include <iostream>
 #include "expEvaluator.hpp"
 
-int ExpEvaluator::evaluate(std::string exp, std::string values) {
+int ExpEvaluator::evaluate(std::string option, std::string exp, std::string values) {
     int variableValues[100]; // Supondo que pode haver até 100 variáveis (0 a 99)
 
     // Contagem do número de variáveis na expressão
@@ -16,7 +16,7 @@ int ExpEvaluator::evaluate(std::string exp, std::string values) {
 
     // noQuant foi só uma maneira de diferenciar se a expressão passada vai ou não ter quantificadores
     // já que essa função de avaliação é usada para ambos os casos
-    if(values.find_first_of("ae") != std::string::npos) {
+    if(option == "noQuant") {
         for (char c : values) {
             if (std::isalpha(c)) {
                 throw std::runtime_error("Não pode haver quantificadores na valuação.");
@@ -179,35 +179,4 @@ bool ExpEvaluator::isOperator(char c) {
 
 bool ExpEvaluator::isDigit(char c) {
     return (c >= '0' && c <= '9'); // Verifica se é um dígito numérico
-}
-
-// ------------------------- Lógica para lidar com quantificadores ----------------------------------
-
-// Função para verificar a satisfatibilidade da expressão dada uma valoração
-void ExpEvaluator::satisfabilitiyCheck(std::string expression, std::string valuation) {
-    BinaryTree tree;
-    tree.buildTree(valuation); // Constrói a árvore com base na valoração passada
-    NodeType* root = tree.getRoot(); // Salva a raíz da árvore
-    tree.infix(root);
-    std::cout << " "<< std::endl;
-
-    if (root != nullptr) {
-        // Caminha e avalia as folhas (valorações) na árvore
-        tree.traverseAndEvaluate(expression, root);
-        tree.infix1(root);
-        std::cout << " "<< std::endl;
-
-        tree.processString(valuation);
-        tree.infix2(root);
-
-        std::cout << " "<< std::endl;
-        if (root->result == 0) {
-            std::cout << "0" << std::endl;
-        } else if (root->result == 1) {
-            std::cout << "1 " << tree.evaluateRootChildren() << std::endl;
-        }
-        
-    } else {
-         std::cout << "A raíz da árvore não pode ser nula." << std::endl;
-    }
 }
