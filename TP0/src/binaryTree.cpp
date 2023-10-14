@@ -9,8 +9,6 @@
 #include "../include/stacks.hpp"
 #include "../include/expEvaluator.hpp"
 
-
-
 BinaryTree::BinaryTree() {
     root = nullptr; // Initialize the root of the binary tree to null.
 }
@@ -68,8 +66,7 @@ void BinaryTree::traverseAndEvaluate(std::string expression, NodeType *p) {
 
     if (p->left == nullptr && p->right == nullptr) { // AVALIA AS FOLHAS DA ÁRVORE!!
         std::string str = p->item;
-        int result = obj.evaluate(expression, str); // Evaluate the expression using the ExpEvaluator object.
-        p->isAnswer = result;
+        p->result  = obj.evaluate(expression, str); // Evaluate the expression using the ExpEvaluator object.
     } else {
         traverseAndEvaluate(expression, p->left); // Recursively evaluate the left subtree.
         traverseAndEvaluate(expression, p->right); // Recursively evaluate the right subtree.
@@ -86,7 +83,7 @@ void BinaryTree::traverse(int type) {
             prefix(root);
             break;
         case 2: // Infix traversal
-            infix(root);
+            //infix(root);
             break;
         case 3: // Postfix traversal
             postfix(root);
@@ -104,30 +101,6 @@ void BinaryTree::prefix(NodeType* p) {
         std::cout << p->item << " ";
         prefix(p->left);
         prefix(p->right);
-    }
-}
-
-void BinaryTree::infix(NodeType* p) {
-    if (p != nullptr) {
-        infix(p->left);
-        std::cout << p->item << " ";
-        infix(p->right);
-    }
-}
-
-void BinaryTree::infix1(NodeType* p) {
-    if (p != nullptr) {
-        infix1(p->left);
-        std::cout << p->isAnswer << " ";
-        infix1(p->right);
-    }
-}
-
-void BinaryTree::infix2(NodeType* p) {
-    if (p != nullptr) {
-        infix2(p->left);
-        std::cout << p->result << " ";
-        infix2(p->right);
     }
 }
 
@@ -178,52 +151,40 @@ std::string BinaryTree::extractEAndA(const std::string& input) {
     return eAndA;
 }
 
-void BinaryTree::processOperations(NodeType* p, const std::string& eAndA) {
-    if (p == nullptr) {
+void BinaryTree::processOperations(NodeType* p, std::string eAndA) {
+    if (p == nullptr || eAndA.empty()) {
         return;
     }
-
-    // Ensure eAndAIndex starts at the beginning of the string
-    std::string::size_type eAndAIndex = 0;
 
     processOperations(p->left, eAndA);  // Recursively process left subtree
     processOperations(p->right, eAndA); // Recursively process right subtree
 
     if (p->left == nullptr && p->right == nullptr) {
         // Leaf node
-        int leafValue = p->isAnswer;
+        return;
+    }
 
-        if (eAndAIndex < eAndA.length()) {
-            char op = eAndA[eAndAIndex];
-            eAndAIndex++;
+    char op = eAndA.back();
+    eAndA.pop_back();
 
-            if (op == 'a') {
-                // Perform & operation
-                p->result = leafValue & 1;
-            } else if (op == 'e') {
-                // Perform | operation
-                p->result = leafValue | 0;
-            }
-        }
-    } else {
-        // Internal node
-        if (eAndAIndex < eAndA.length()) {
-            char op = eAndA[eAndAIndex];
-            eAndAIndex++;
+    int leftResult = p->left ? p->left->result : 0;
+    int rightResult = p->right ? p->right->result : 0;
 
-            if (op == 'a') {
-                // Perform & operation
-                p->result = (p->left ? p->left->result : 0) & (p->right ? p->right->result : 0);
-            } else if (op == 'e') {
-                // Perform | operation
-                p->result = (p->left ? p->left->result : 0) | (p->right ? p->right->result : 0);
-            }
-        }
+    if (op == 'a') {
+        // Perform & operation for internal node
+        std::cout << "AND OP" << std::endl;
+        p->result = leftResult & rightResult;
+    } else if (op == 'e') {
+        // Perform | operation for internal node
+         std::cout << "OR OP" << std::endl;
+        p->result = leftResult | rightResult;
     }
 }
 
+
 void BinaryTree::processString(const std::string& input) {
     std::string eAndA = extractEAndA(input);
+    
     if (!eAndA.empty()) {
         processOperations(root, eAndA);
     }
@@ -238,28 +199,136 @@ std::string BinaryTree::evaluateRootChildren() {
     int rightResult = root->right->result;
 
     if (root->result == 0) {
-        return "0";  // If both children's results are 0, return "0".
+        return "";  
     } else if (root->result == 1) {
         if (leftResult == 0 && rightResult == 1) {
-            return getLeafItems(root->right);  // If the left child's result is 0, return items of the right subtree.
+            return getLeafItems(root->right, 1);  // If the left child's result is 0, return items of the right subtree with a result of 1.
         } else if (leftResult == 1 && rightResult == 0) {
-            return getLeafItems(root->left);  // If the right child's result is 0, return items of the left subtree.
+            return getLeafItems(root->left, 1);  // If the right child's result is 0, return items of the left subtree with a result of 1.
         } else if (leftResult == 1 && rightResult == 1) {
-            return getLeafItems(root);  // If both children's results are 1, return items of all leaf nodes.
+            return getLeafItems(root, 1);  // If both children's results are 1, return items of all leaf nodes with a result of 1.
         }
     }
     
     return "";  // Default return an empty string.
 }
 
-std::string BinaryTree::getLeafItems(NodeType* p) {
+
+std::string BinaryTree::getLeafItems(NodeType* p, int targetResult) {
     if (p == nullptr) {
         return "";
     }
 
-    if (p->left == nullptr && p->right == nullptr) {
-        return p->item + " ";  // Return the item if it's a leaf node.
+    if (p->left == nullptr && p->right == nullptr && p->result == targetResult) {
+        return p->item + " ";  // Return the item if it's a leaf node with the target result.
     } else {
-        return getLeafItems(p->left) + getLeafItems(p->right);  // Recursively accumulate items from leaf nodes.
+        return getLeafItems(p->left, targetResult) + getLeafItems(p->right, targetResult);  // Recursively accumulate items from leaf nodes with the target result.
     }
+}
+
+
+void BinaryTree::printTree(NodeType* p, int indent) {
+    if (p != nullptr) {
+        if (p->right) {
+            printTree(p->right, indent + 4);
+        }
+        if (indent > 0) {
+            std::cout << std::setw(indent) << ' ';
+        }
+        if (p->right) {
+            std::cout << " /\n" << std::setw(indent) << ' ';
+        }
+        std::cout << p->item << "\n";
+        if (p->left) {
+            std::cout << std::setw(indent) << ' ' << " \\\n";
+            printTree(p->left, indent + 4);
+        }
+    }
+}
+
+void BinaryTree::printTree1(NodeType* p, int indent) {
+     if (p != nullptr) {
+        if (p->right) {
+            printTree1(p->right, indent + 4);
+        }
+        if (indent > 0) {
+            std::cout << std::setw(indent) << ' ';
+        }
+        if (p->right) {
+            std::cout << " /\n" << std::setw(indent) << ' ';
+        }
+        std::cout << p->result << "\n";
+        if (p->left) {
+            std::cout << std::setw(indent) << ' ' << " \\\n";
+            printTree1(p->left, indent + 4);
+        }
+    }
+}
+
+std::string BinaryTree::aNotation(std::string input) {
+    std::stringstream ss(input);
+    int num;
+    
+    // Try to extract a single number from the input
+    if (ss >> num) {
+        // Check if there are any other characters in the input
+        char c;
+        if (!(ss >> c)) {
+            return input; // Return the input as is.
+        }
+    }
+
+    // If there's more than one number or extra characters, perform the standard logic
+
+    const int MAX_NUMBERS = 100;  // Maximum number of numbers supported
+    int numbers[MAX_NUMBERS];
+    int numCount = 0;
+
+    ss.clear(); // Clear the stream state.
+    ss.seekg(0); // Reset the stream position.
+
+    while (ss >> num) {
+        numbers[numCount++] = num;
+    }
+
+    if (numCount == 0) {
+        return ""; // No numbers to combine.
+    }
+
+    int maxDigits = 0;
+
+    // Find the maximum number of digits in the input numbers
+    for (int i = 0; i < numCount; i++) {
+        int digits = static_cast<int>(log10(numbers[i])) + 1;
+        maxDigits = std::max(maxDigits, digits);
+    }
+
+    char result[maxDigits + 1];
+    result[maxDigits] = '\0';  // Null-terminate the string
+
+    // Initialize the result with spaces
+    for (int i = 0; i < maxDigits; i++) {
+        result[i] = ' ';
+    }
+
+    // Iterate over each digit position
+    for (int digitPos = maxDigits - 1; digitPos >= 0; digitPos--) {
+        char commonDigit = '\0';  // Initialize with an invalid value
+
+        for (int i = 0; i < numCount; i++) {
+            int divisor = static_cast<int>(pow(10, digitPos));
+            int digit = (numbers[i] / divisor) % 10;
+
+            if (commonDigit == '\0') {
+                commonDigit = static_cast<char>(digit + '0');
+            } else if (digit != (commonDigit - '0')) {
+                commonDigit = 'a';
+                break;
+            }
+        }
+
+        result[maxDigits - digitPos - 1] = commonDigit;
+    }
+
+    return result;
 }

@@ -188,23 +188,25 @@ void ExpEvaluator::satisfabilitiyCheck(std::string expression, std::string valua
     BinaryTree tree;
     tree.buildTree(valuation); // Constrói a árvore com base na valoração passada
     NodeType* root = tree.getRoot(); // Salva a raíz da árvore
-    tree.infix(root);
-    std::cout << " "<< std::endl;
+    tree.printTree(root, 0);
+    std::cout << "------------------------------------------------------- "<< std::endl;
 
     if (root != nullptr) {
         // Caminha e avalia as folhas (valorações) na árvore
         tree.traverseAndEvaluate(expression, root);
-        tree.infix1(root);
-        std::cout << " "<< std::endl;
+        tree.printTree1(root, 0);
+        std::cout << "------------------------------------------------------- "<< std::endl;
 
         tree.processString(valuation);
-        tree.infix2(root);
+        tree.printTree1(root, 0);
+        std::cout << "------------------------------------------------------- "<< std::endl;
 
         std::cout << " "<< std::endl;
         if (root->result == 0) {
             std::cout << "0" << std::endl;
         } else if (root->result == 1) {
             std::cout << "1 " << tree.evaluateRootChildren() << std::endl;
+            std::cout << "1 " << tree.aNotation(tree.evaluateRootChildren()) << std::endl;
         }
         
     } else {

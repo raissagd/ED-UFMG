@@ -9,14 +9,13 @@
 #define BINARY_TREE_H
 
 #include <iostream>
-
-#include <stack>
-
+#include <sstream>
+#include <cmath>
+#include <iomanip>
 struct NodeType {
     std::string item;
     NodeType* left;
     NodeType* right;
-    int isAnswer;
     int result = -1; // initialize with something
     NodeType* parent; // Added parent reference
 };
@@ -30,12 +29,13 @@ public:
     void traverseAndEvaluate(std::string expression, NodeType *p);
     void processString(const std::string& input);
 
-    void infix(NodeType* p);
-    void infix1(NodeType* p);
-    void infix2(NodeType* p);
-
     std::string evaluateRootChildren();
-    std::string getLeafItems(NodeType* p);
+    std::string getLeafItems(NodeType* p, int targetResult);
+
+    void printTree(NodeType* p, int indent);
+    void printTree1(NodeType* p, int indent);
+
+    std::string aNotation(std::string input);
 
     NodeType* getRoot();
 
@@ -48,7 +48,7 @@ private:
     int getHeight(NodeType* node);
     void printLevel(NodeType* node, int level);
     std::string extractEAndA(const std::string& input);
-    void processOperations(NodeType* p, const std::string& eAndA);
+    void processOperations(NodeType* p, std::string eAndA);
 
     NodeType *root;
 };
