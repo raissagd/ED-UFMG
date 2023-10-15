@@ -14,8 +14,7 @@ int ExpEvaluator::evaluate(std::string exp, std::string values) {
     // Contagem do número de variáveis na expressão
     int numVariables = countVariables(exp);
 
-    // noQuant foi só uma maneira de diferenciar se a expressão passada vai ou não ter quantificadores
-    // já que essa função de avaliação é usada para ambos os casos
+   // para o caso em que não há quantificadores
     if(values.find_first_of("ae") != std::string::npos) {
         for (char c : values) {
             if (std::isalpha(c)) {
@@ -188,29 +187,24 @@ void ExpEvaluator::satisfabilitiyCheck(std::string expression, std::string valua
     BinaryTree tree;
     tree.buildTree(valuation); // Constrói a árvore com base na valoração passada
     NodeType* root = tree.getRoot(); // Salva a raíz da árvore
-    tree.printTree(root, 0);
-    std::cout << "------------------------------------------------------- "<< std::endl;
 
     if (root != nullptr) {
-        // Caminha e avalia as folhas (valorações) na árvore
+        // Avalia a satisfabilidade de cada possibilidade possível na expressão passada
         tree.traverseAndEvaluate(expression, root);
-        tree.printTree1(root, 0);
-        std::cout << "------------------------------------------------------- "<< std::endl;
 
+        // Cria uma string só com os quantificadores passados na valoração
         std::string val = tree.extractEAndA(valuation);
-        tree.applyOperationsFromBottom(val);
-        tree.printTree1(root, 0);
-        std::cout << "------------------------------------------------------- "<< std::endl;
 
-        std::cout << " "<< std::endl;
+        // Baseado nos quantificadores, realiza as operações na árvore de baixo para cima
+        tree.applyOperationsFromBottom(val);
+
+        // Verifica o resultado da avaliação
         if (root->result == 0) {
-            std::cout << "0" << std::endl;
+            std::cout << "0" << std::endl; // Expressão insatisfatível
         } else if (root->result == 1) {
-            std::cout << "1 " << tree.evaluateRootChildren() << std::endl;
-            std::cout << "1 " << tree.aNotation(tree.evaluateRootChildren()) << std::endl;
+            std::cout << "1 " << tree.aNotation(tree.evaluateRootChildren()) << std::endl; // Expressão satisfatível
         }
-        
     } else {
-         std::cout << "A raíz da árvore não pode ser nula." << std::endl;
+        std::cout << "A raíz da árvore não pode ser nula." << std::endl;
     }
 }

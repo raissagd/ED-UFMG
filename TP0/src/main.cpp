@@ -41,8 +41,12 @@ int main(int argc, char* argv[]) {
 
     } else if (option == "-s") {
         // Problema de satisfabilidade
-        obj.satisfabilitiyCheck(formula, valuation); // chama a função para avaliar a expressão com quantificadores
-
+        try {
+            obj.satisfabilitiyCheck(formula, valuation); // chama a função para avaliar a expressão com quantificadores
+        } catch (const std::runtime_error& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
+            
     } else {
         std::cerr << "Opção inválida. Exemplo de entrada: ./bin/main -a '0 | 1 & 2' 010" << std::endl;
         return 1;
