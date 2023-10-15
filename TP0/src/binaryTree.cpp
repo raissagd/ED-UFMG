@@ -46,7 +46,6 @@ void BinaryTree::buildRecursive(NodeType* &p, std::string item, int pos, NodeTyp
     }
 }
 
-
 void BinaryTree::clear(NodeType* &p) {
     if (p != nullptr) {
         clear(p->left); // Recursively clear the left subtree.
@@ -151,43 +150,35 @@ std::string BinaryTree::extractEAndA(const std::string& input) {
     return eAndA;
 }
 
-void BinaryTree::processOperations(NodeType* p, std::string eAndA) {
-    if (p == nullptr || eAndA.empty()) {
+void BinaryTree::applyOperationRecursive(NodeType* p, char operation, int level) {
+    if (p == nullptr || level == 0) {
         return;
     }
 
-    processOperations(p->left, eAndA);  // Recursively process left subtree
-    processOperations(p->right, eAndA); // Recursively process right subtree
+    // Recursively apply the operation to the child nodes
+    applyOperationRecursive(p->left, operation, level - 1);
+    applyOperationRecursive(p->right, operation, level - 1);
 
-    if (p->left == nullptr && p->right == nullptr) {
-        // Leaf node
-        return;
-    }
-
-    char op = eAndA.back();
-    eAndA.pop_back();
-
-    int leftResult = p->left ? p->left->result : 0;
-    int rightResult = p->right ? p->right->result : 0;
-
-    if (op == 'a') {
-        // Perform & operation for internal node
+    // Store the result in the parent
+    if (operation == 'a') {
+        // AND operation
         std::cout << "AND OP" << std::endl;
-        p->result = leftResult & rightResult;
-    } else if (op == 'e') {
-        // Perform | operation for internal node
-         std::cout << "OR OP" << std::endl;
-        p->result = leftResult | rightResult;
+        p->result = (p->left ? p->left->result : 0) & (p->right ? p->right->result : 0);
+    } else if (operation == 'e') {
+        // OR operation
+        std::cout << "OR OP" << std::endl;
+        p->result = (p->left ? p->left->result : 0) | (p->right ? p->right->result : 0);
     }
 }
 
+void BinaryTree::applyOperationsFromBottom(const std::string& operations) {
+    int level = getHeight(root) - 1; // Start from the last level (the leaf nodes).
 
-void BinaryTree::processString(const std::string& input) {
-    std::string eAndA = extractEAndA(input);
-    
-    if (!eAndA.empty()) {
-        processOperations(root, eAndA);
-    }
+    for(int i = operations.length() - 1; i >= 0; i--) {
+        std::cout << "LEVEL: " << level << std::endl;
+        applyOperationRecursive(root, operations[i], level);
+        level--;
+    }   
 }
 
 std::string BinaryTree::evaluateRootChildren() {
@@ -213,7 +204,6 @@ std::string BinaryTree::evaluateRootChildren() {
     return "";  // Default return an empty string.
 }
 
-
 std::string BinaryTree::getLeafItems(NodeType* p, int targetResult) {
     if (p == nullptr) {
         return "";
@@ -225,7 +215,6 @@ std::string BinaryTree::getLeafItems(NodeType* p, int targetResult) {
         return getLeafItems(p->left, targetResult) + getLeafItems(p->right, targetResult);  // Recursively accumulate items from leaf nodes with the target result.
     }
 }
-
 
 void BinaryTree::printTree(NodeType* p, int indent) {
     if (p != nullptr) {

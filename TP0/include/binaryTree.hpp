@@ -27,7 +27,7 @@ public:
     void buildTree(std::string item);
     void clear(NodeType* &p);
     void traverseAndEvaluate(std::string expression, NodeType *p);
-    void processString(const std::string& input);
+    
 
     std::string evaluateRootChildren();
     std::string getLeafItems(NodeType* p, int targetResult);
@@ -37,6 +37,12 @@ public:
 
     std::string aNotation(std::string input);
 
+    //void processString(const std::string& input);
+    std::string extractEAndA(const std::string& input);
+
+    void applyOperationRecursive(NodeType* p, char operation, int levelToApply);
+    void applyOperationsFromBottom(const std::string& operations);
+    
     NodeType* getRoot();
 
 private:
@@ -47,8 +53,7 @@ private:
     void levelOrder();
     int getHeight(NodeType* node);
     void printLevel(NodeType* node, int level);
-    std::string extractEAndA(const std::string& input);
-    void processOperations(NodeType* p, std::string eAndA);
+
 
     NodeType *root;
 };

@@ -197,7 +197,8 @@ void ExpEvaluator::satisfabilitiyCheck(std::string expression, std::string valua
         tree.printTree1(root, 0);
         std::cout << "------------------------------------------------------- "<< std::endl;
 
-        tree.processString(valuation);
+        std::string val = tree.extractEAndA(valuation);
+        tree.applyOperationsFromBottom(val);
         tree.printTree1(root, 0);
         std::cout << "------------------------------------------------------- "<< std::endl;
 
