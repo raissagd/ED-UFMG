@@ -1,9 +1,16 @@
+//---------------------------------------------------------------------
+// Arquivo      : graph.cpp
+// Conteudo     : Implementação do grafo
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 28/10/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #include "../include/graph.hpp"
 
 Graph::Graph() : V(0), adjList(nullptr) {
-    colors = new int[V]; // initialize with the number of vertices
+    colors = new int[V]; // inicializa com o número de vértices
     for (int i = 0; i < V; i++)
-        colors[i] = -1; // default color value
+        colors[i] = -1; // valor padrão para cor
 }
 
 Graph::~Graph() {
@@ -12,21 +19,21 @@ Graph::~Graph() {
 }
 
 void Graph::insertVertex() {
-    LinkedList* newAdjList = new LinkedList[V + 1]; // Create a new array of linked lists with an additional slot for the new vertex
+    LinkedList* newAdjList = new LinkedList[V + 1]; // Cria um novo array de listas ligadas com um espaço adicional para o novo vértice
 
-    // Copy existing adjacency lists into the new array
+    // Copia listas de adjacências existentes para o novo array
     for (int i = 0; i < V; ++i) {
-        newAdjList[i] = adjList[i]; // This assumes you have a copy constructor or an appropriate method in LinkedList to handle this operation.
+        newAdjList[i] = adjList[i]; // Isso presume que você tenha um construtor de cópia ou um método apropriado em LinkedList para lidar com esta operação.
     }
 
-    delete[] adjList; // Delete the old array
-    adjList = newAdjList; // Point to the new array
-    ++V; // Increase the number of vertices
+    delete[] adjList; // Deleta o array antigo
+    adjList = newAdjList; // Aponta para o novo array
+    ++V; // Aumenta o número de vértices
 }
 
 void Graph::insertEdge(int v, int w) {
-    if (v < V && w < V) { // check if the vertices exist
-        adjList[v].insert(w); // add w to v’s list, but not v to w’s list
+    if (v < V && w < V) { // verifica se os vértices existem
+        adjList[v].insert(w); // adiciona w à lista de v, mas não v à lista de w
     }
 }
 
@@ -35,50 +42,25 @@ int Graph::numVertices() {
 }
 
 int Graph::numEdges() {
-    int totalEdges = 0;
+    int totalArestas = 0;
     for (int i = 0; i < V; ++i) {
-        totalEdges += adjList[i].size(); // Assumes 'size' gives the number of elements in the linked list
+        totalArestas += adjList[i].size(); // Presume-se que 'size' forneça o número de elementos na lista ligada
     }
-    return totalEdges / 2; // Each edge is counted twice, so we divide by 2.
-}
-
-int Graph::minimumDegree() {
-    if (V == 0) {
-        return 0; // If there are no vertices, return 0
-    }
-
-    int minDegree = adjList[0].size(); // Initialize with the degree of the first vertex
-
-    // Iterate through all vertices
-    for (int i = 1; i < V; ++i) {
-        int currentDegree = adjList[i].size();
-        if (currentDegree < minDegree) {
-            minDegree = currentDegree; // Update minDegree if the current one is lower
-        }
-    }
-
-    return minDegree;
+    return totalArestas / 2; // Cada aresta é contada duas vezes, então dividimos por 2.
 }
 
 int Graph::maximumDegree() {
-    int maxDegree = 0; // Initially, set to 0
+    int maxDegree = 0; // Inicialmente, define como 0
 
-    // Iterate through all vertices
+    // Itera por todos os vértices
     for (int i = 0; i < V; ++i) {
-        int currentDegree = adjList[i].size();
-        if (currentDegree > maxDegree) {
-            maxDegree = currentDegree; // Update maxDegree if the current one is higher
+        int grauAtual = adjList[i].size();
+        if (grauAtual > maxDegree) {
+            maxDegree = grauAtual; // Atualiza maxDegree se o atual for maior
         }
     }
 
     return maxDegree;
-}
-
-void Graph::printNeighbors(int v) {
-    if (v < V) {
-        std::cout << "Neighbors of vertex " << v << ": ";
-        adjList[v].print(); // Assumes 'print' is a method in LinkedList that prints its elements.
-    }
 }
 
 void Graph::addColor(int v, int c) {
@@ -91,7 +73,7 @@ int Graph::getVertexColor(int v) {
     if (v >= 0 && v < V) {
         return colors[v];
     }
-    return -1; // or some other invalid color indicator
+    return -1; // cor inválida
 }
 
 bool Graph::isGreedy(int v, int c) {
@@ -104,40 +86,40 @@ bool Graph::isGreedy(int v, int c) {
         return true;
     }
 
-   // For each vertex in the graph
+   // Para cada vértice no grafo
     for (int v = 0; v < V; ++v) {
-        // Create a boolean array for all possible lesser colors, all initialized to false.
-        int max = 10000;
-        bool lesserColors[max] = {false};  // Assumes MAX_COLOR is defined as the maximum possible color + 1.
+        // Cria um array booleano para todas as cores menores possíveis, todas inicializadas como falsas.
+        int max = 10000; // Max de cores possiveis foi arbitrariamente escolhido
+        bool lesserColors[max] = {false};  
 
-        Node* current = adjList[v].getHead(); // Get the head of the adjacency list for this vertex.
+        Node* current = adjList[v].getHead(); // Pega a célula cabeça da lista de adjacência para este vértice.
 
-        // Check the colors of the adjacent vertices.
+        // Verifica as cores dos vértices adjacentes.
         while (current != nullptr) {
-            int adjacent = current->data; // The adjacent vertex.
+            int adjacent = current->data; // O vértice adjacente.
 
-            // Check if an adjacent vertex has the same color - if so, it's not greedy.
+            // Verifica se um vértice adjacente tem a mesma cor - se sim, não é guloso.
             if (colors[v] == colors[adjacent]) {
                 return false;
             }
 
-            // If the color of the adjacent vertex is less than this vertex's color, record that.
+            // Se a cor do vértice adjacente for menor que a cor deste vértice, registra isso.
             if (colors[adjacent] < colors[v]) {
                 lesserColors[colors[adjacent]] = true;
             }
 
-            current = current->next; // Move to the next adjacent vertex.
+            current = current->next; // Move para o próximo vértice adjacente.
         }
 
-        // Now check that all colors less than this vertex's color are present among the neighbors.
-        for (int i = 1; i < colors[v]; ++i) { // Start from 1 because there's no color less than 1.
+        // Agora verifica se todas as cores menores que a cor deste vértice estão presentes entre os vizinhos.
+        for (int i = 1; i < colors[v]; ++i) { // Começa de 1 porque não há cor menor que 1.
             if (!lesserColors[i]) {
-                // If any lesser color is not present among the neighbors, it's not a greedy coloring.
+                // Se alguma cor menor não estiver presente entre os vizinhos, não é uma coloração gulosa.
                 return false;
             }
         }
     }
 
-    // If we've satisfied all the conditions, it's a greedy coloring.
+    // Se todas as condições foram satisfeitas, é uma coloração gulosa.
     return true;
 }

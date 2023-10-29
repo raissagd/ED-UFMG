@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : graph.hpp
+// Conteúdo     : arquivo de cabeçario de graph.hpp
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Histórico    : 28/10/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
@@ -7,23 +14,21 @@
 
 class Graph {
 private:
-    int V; // Number of vertices
-    LinkedList* adjList; // Adjacency list now as an array of linked lists
-    int* colors;
-    
+    int V; // Número de vértices
+    LinkedList* adjList; // Lista de adjacências
+    int* colors; // Array para armazenar as cores atribuídas aos vértices
+
 public:
-    Graph(); // Constructor
-    ~Graph(); // Destructor
-    void insertVertex(); // Add a vertex to the graph
-    void insertEdge(int v, int w); // Add an edge to the graph
-    int numVertices(); // Returns the number of vertices
-    int numEdges(); // Returns the number of edges
-    int minimumDegree(); // Returns the degree of the node with the least number of edges
-    int maximumDegree(); // Returns the degree of the node with the most number of edges
-    void printNeighbors(int v); // Prints the neighbors of a given vertex
-    void addColor(int v, int c);
-    int getVertexColor(int v);
-    bool isGreedy(int v, int c);
+    Graph(); // Construtor
+    ~Graph(); // Destrutor
+    void insertVertex(); // Adiciona um vértice ao grafo
+    void insertEdge(int v, int w); // Adiciona uma aresta ao grafo (conecta os vértices 'v' e 'w')
+    int numVertices(); // Retorna o número de vértices no grafo
+    int numEdges(); // Retorna o número de arestas no grafo
+    int maximumDegree(); // Retorna o grau maximo de arestas que aquele grafo poderia ter, baseado no num de vértices
+    void addColor(int v, int c); // Atribui a cor 'c' ao vértice 'v'
+    int getVertexColor(int v); // Obtém a cor atualmente atribuída ao vértice 'v'
+    bool isGreedy(int v, int c); // Verifica se a coloração atual é 'gulosa' com base no vértice 'v' e na cor 'c'
 };
 
 #endif // GRAPH_HPP

@@ -1,49 +1,54 @@
+//---------------------------------------------------------------------
+// Arquivo      : list.cpp
+// Conteudo     : Implementação da lista encadeada usada para armazenar os elementos do grafo
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 28/10/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #include "../include/linkedList.hpp"
 
-// Constructor
+// Construtor
 LinkedList::LinkedList() : head(nullptr), listSize(0) {}
 
-// Destructor
+// Destrutor
 LinkedList::~LinkedList() {
     Node* current = head;
     while (current != nullptr) {
         Node* next = current->next;
-        delete current;
+        delete current; // Libera a memória alocada para o nó
         current = next;
     }
-    head = nullptr; // Safeguard
+    head = nullptr;
 }
 
 Node* LinkedList::getHead() {
-    return head;
+    return head; // Retorna o início da lista
 }
 
-// Method to insert a new node at the end of the list
+// Método para inserir um novo nó no final da lista
 void LinkedList::insert(int value) {
-    // Including color in aggregate initialization, assuming '0' as default color.
-    Node* newNode = new Node{value, -1, nullptr};  // '-1' is a placeholder
+    Node* newNode = new Node{value, -1, nullptr};
 
     if (head == nullptr) {
-        head = newNode;
+        head = newNode; // Se a lista está vazia, o novo nó é agora a cabeça
     } else {
         Node* current = head;
-        while (current->next != nullptr) {
+        while (current->next != nullptr) { // Navega pela lista até encontrar o último nó
             current = current->next;
         }
-        current->next = newNode;
+        current->next = newNode; // Insere o novo nó no final da lista
     }
-    listSize++;
+    listSize++; // Incrementa o contador de tamanho da lista
 }
 
-
-// Method to remove a node from the list based on value
+// Método para remover um nó da lista com base no valor
 bool LinkedList::remove(int value) {
-    if (head == nullptr) return false; // List is empty
+    if (head == nullptr) return false; // A lista está vazia
 
     if (head->data == value) {
         Node* tempNode = head;
-        head = head->next;
-        delete tempNode;
+        head = head->next; // O segundo nó agora é a cabeça
+        delete tempNode; // Libera a memória do nó antigo
         listSize--;
         return true;
     }
@@ -52,31 +57,17 @@ bool LinkedList::remove(int value) {
     while (current->next != nullptr) {
         if (current->next->data == value) {
             Node* tempNode = current->next;
-            current->next = current->next->next;
-            delete tempNode;
+            current->next = current->next->next; // Desvincula o nó a ser removido
+            delete tempNode; // Libera a memória do nó desvinculado
             listSize--;
             return true;
         }
-        current = current->next;
+        current = current->next; // Continua a navegação pela lista
     }
-    return false; // If we reach here, the value was not found
+    return false; // Se o valor não foi encontrado
 }
 
-// Method to get the size of the list
+// Método para obter o tamanho da lista
 int LinkedList::size() {
     return listSize;
-}
-
-// Method to print the list contents
-void LinkedList::print() {
-     Node* temp = head; // assuming 'head' points to the start of your linked list
-
-    while (temp != nullptr) {
-        std::cout << temp->data; // assuming your node's data is an integer
-        if (temp->next != nullptr) {
-            std::cout << " "; // separate the numbers by spaces
-        }
-        temp = temp->next;
-    }
-    std::cout << std::endl; 
 }

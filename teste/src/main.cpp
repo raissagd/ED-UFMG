@@ -1,3 +1,10 @@
+//---------------------------------------------------------------------
+// Arquivo      : main.cpp
+// Conteudo     : Implementacao do arquivo principal
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 28/10/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #include "../include/graph.hpp"
 #include "../include/sort.hpp"
 #include <iostream>
@@ -37,8 +44,8 @@ int main(int argc, char* argv[]) {
 
     // Set the color for each vertex in the graph.
     for (int i = 0; i < numV; ++i) {
-        vertices[i].color = i;
-        graph.addColor(i, colors[i]); // Set the color for vertex 'i'.
+       vertices[i].color = colors[i];
+       graph.addColor(i, colors[i]); // Set the color for vertex 'i'.
     }
 
     // se não é um algoritmo guloso, já retorna 0 de uma vez
@@ -49,7 +56,8 @@ int main(int argc, char* argv[]) {
             return 0;
         }
     }
-
+    
+    // sort the array of vertices first, according to the colors
     if (op == "-b") {
         sort.bubblesort(vertices, numV);
     } else if (op == "-s") { // selection sort
@@ -64,18 +72,7 @@ int main(int argc, char* argv[]) {
         sort.heapsort(vertices);
     } else if (op == "-y") { // customized sort method
         sort.customsort(vertices);
-    } /* else if (op == "-n") {
-        // Operation to print the neighborhoods of the vertices
-
-        for (int i = 0; i < graph.numVertices(); ++i) { 
-            graph.printNeighbors(i);
-        }
-
-         for (int i = 0; i < graph.numVertices(); ++i) {
-            int color = graph.getVertexColor(i);
-            std::cout << "Vertex " << i << " has color: " << color << std::endl;
-         }
-    } */
+    }
 
     sort.printVerticesByValue(vertices, numV);
 
