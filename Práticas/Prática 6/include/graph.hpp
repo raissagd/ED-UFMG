@@ -23,9 +23,6 @@ struct s_grafo {
 };
 typedef struct s_grafo Grafo;
 
-
-
-
 Grafo* NovoGrafo();
 void DeletaGrafo(Grafo* g);
 
