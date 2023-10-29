@@ -76,25 +76,3 @@ void LinkedList::print() {
     }
     std::cout << std::endl; 
 }
-
- void LinkedList::setColor(int v, int c) {
-    Node* current = head;
-    while (current != nullptr) {
-        if (current->data == v) {
-            current->color = c;
-            return;
-        }
-        current = current->next;
-    }
-}
-
-int LinkedList::getColor(int value) {
-    Node* current = head;
-    while (current != nullptr) {
-        if (current->data == value) {
-            return current->color; // found the node, return its color
-        }
-        current = current->next;
-    }
-    return -1; // return an invalid color if the node wasn't found (handle this case!)
-}

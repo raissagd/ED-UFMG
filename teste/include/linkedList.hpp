@@ -21,8 +21,6 @@ public:
     bool remove(int value); // Remove a node with the specified value
     int size(); // Get the size of the list
     void print(); // Print the contents of the list
-    void setColor(int v, int c);
-    int getColor(int value); 
 };
 
 #endif //LINKEDLIST_HPP

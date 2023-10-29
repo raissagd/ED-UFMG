@@ -9,7 +9,8 @@ class Graph {
 private:
     int V; // Number of vertices
     LinkedList* adjList; // Adjacency list now as an array of linked lists
-
+    int* colors;
+    
 public:
     Graph(); // Constructor
     ~Graph(); // Destructor

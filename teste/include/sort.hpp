@@ -19,6 +19,7 @@ public:
     void selectionsort(Vertix* array);
     void insertionsort(Vertix* array);
     void heapsort(Vertix* array);
+    void customsort(Vertix* array);
 };
 
 #endif

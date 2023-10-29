@@ -3,15 +3,13 @@
 #include <iostream>
 #include <string>
 #include <sstream> 
-#include <limits>
-#include <vector>
-
 
 int main(int argc, char* argv[]) {
     std::string op = argv[1];
     int numV;
     std::cin >> numV;
     Graph graph;
+    Sort sort(numV);
     Vertix* vertices = new Vertix[numV];
 
     // Insert vertices into the graph
@@ -32,33 +30,34 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    std::vector<int> colors(numV); // Vector to hold the colors.
+    int* colors = new int[numV]; 
     for (int i = 0; i < numV; ++i) {
         std::cin >> colors[i]; // Read the color for vertex 'i'.
     }
 
-    // Now, we set the color for each vertex in the graph.
+    // Set the color for each vertex in the graph.
     for (int i = 0; i < numV; ++i) {
+        vertices[i].color = i;
         graph.addColor(i, colors[i]); // Set the color for vertex 'i'.
     }
-
     
     if (op == "-b") {
-        // bubble sort
-    } else if (op == "-s") {
-       // selection sort
-    } else if (op == "-i") {
-       // insertion sort
-    } else if (op == "-q") {
-       // quicksort
-    } else if (op == "-m") {
-       // mergesort
-    } else if (op == "-p") {
-       // heapsort
-    } else if (op == "-y") {
-       // custom sort
+        sort.bubblesort(vertices);
+    } else if (op == "-s") { // selection sort
+        sort.selectionsort(vertices);
+    } else if (op == "-i") { // insertion sort
+        sort.insertionsort(vertices);
+    } else if (op == "-q") { // quicksort
+        sort.quicksort(vertices);
+    } else if (op == "-m") { // mergesort
+        //sort.mergesort(vertices);
+    } else if (op == "-p") { // heapsort
+        sort.heapsort(vertices);
+    } else if (op == "-y") { // customized sort method
+        sort.customsort(vertices);
     } else if (op == "-n") {
         // Operation to print the neighborhoods of the vertices
+        
         for (int i = 0; i < graph.numVertices(); ++i) { 
             graph.printNeighbors(i);
         }
@@ -69,7 +68,7 @@ int main(int argc, char* argv[]) {
          }
     }
 
-   delete[] vertices;
+    delete[] vertices;
 
     return 0;
 }

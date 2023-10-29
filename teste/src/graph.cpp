@@ -1,9 +1,14 @@
 #include "../include/graph.hpp"
 
-Graph::Graph() : V(0), adjList(nullptr) {}
+Graph::Graph() : V(0), adjList(nullptr) {
+    colors = new int[V]; // initialize with the number of vertices
+    for (int i = 0; i < V; i++)
+        colors[i] = -1; // default color value
+}
 
 Graph::~Graph() {
-    delete[] adjList; // deallocate memory used by the adjacency lists
+    delete[] adjList;
+    delete[] colors; 
 }
 
 void Graph::insertVertex() {
@@ -78,13 +83,16 @@ void Graph::printNeighbors(int v) {
 }
 
 void Graph::addColor(int v, int c) {
-     if(v >= 0 && v < V) {
-        adjList[v].setColor(v, c); // Assumes setColor exists in LinkedList
+    if (v >= 0 && v < V) {
+        colors[v] = c;
     }
 }
 
 int Graph::getVertexColor(int v) {
-    return adjList[v].getColor(v); // use the linked list's getColor method
+    if (v >= 0 && v < V) {
+        return colors[v];
+    }
+    return -1; // or some other invalid color indicator
 }
 
 bool Graph::isGreedy(int v, int c) {
