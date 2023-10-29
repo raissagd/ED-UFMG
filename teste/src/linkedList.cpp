@@ -14,6 +14,10 @@ LinkedList::~LinkedList() {
     head = nullptr; // Safeguard
 }
 
+Node* LinkedList::getHead() {
+    return head;
+}
+
 // Method to insert a new node at the end of the list
 void LinkedList::insert(int value) {
     // Including color in aggregate initialization, assuming '0' as default color.

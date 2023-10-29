@@ -17,10 +17,11 @@ private:
 public:
     LinkedList(); // Constructor
     ~LinkedList(); // Destructor
+    Node* getHead();
     void insert(int value); // Insert a node at the end of the list
     bool remove(int value); // Remove a node with the specified value
     int size(); // Get the size of the list
     void print(); // Print the contents of the list
 };
 
-#endif //LINKEDLIST_HPP
+#endif

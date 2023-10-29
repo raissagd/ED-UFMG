@@ -40,9 +40,18 @@ int main(int argc, char* argv[]) {
         vertices[i].color = i;
         graph.addColor(i, colors[i]); // Set the color for vertex 'i'.
     }
-    
+
+    // se não é um algoritmo guloso, já retorna 0 de uma vez
+    for (int i = 0; i < numV; i++) {
+        if (!graph.isGreedy(vertices[i].item, vertices[i].color)) {
+            std::cout << 0 << std::endl;
+            delete[] vertices; 
+            return 0;
+        }
+    }
+
     if (op == "-b") {
-        sort.bubblesort(vertices);
+        sort.bubblesort(vertices, numV);
     } else if (op == "-s") { // selection sort
         sort.selectionsort(vertices);
     } else if (op == "-i") { // insertion sort
@@ -55,9 +64,9 @@ int main(int argc, char* argv[]) {
         sort.heapsort(vertices);
     } else if (op == "-y") { // customized sort method
         sort.customsort(vertices);
-    } else if (op == "-n") {
+    } /* else if (op == "-n") {
         // Operation to print the neighborhoods of the vertices
-        
+
         for (int i = 0; i < graph.numVertices(); ++i) { 
             graph.printNeighbors(i);
         }
@@ -66,7 +75,9 @@ int main(int argc, char* argv[]) {
             int color = graph.getVertexColor(i);
             std::cout << "Vertex " << i << " has color: " << color << std::endl;
          }
-    }
+    } */
+
+    sort.printVerticesByValue(vertices, numV);
 
     delete[] vertices;
 

@@ -30,7 +30,6 @@ void Graph::insertEdge(int v, int w) {
     }
 }
 
-
 int Graph::numVertices() {
     return V;
 }
@@ -96,5 +95,49 @@ int Graph::getVertexColor(int v) {
 }
 
 bool Graph::isGreedy(int v, int c) {
-    // to do
+    if (c == 1) {
+        return true;
+    }
+
+    // se o grafo é completo, ele é guloso
+    if (numEdges() == maximumDegree()) {
+        return true;
+    }
+
+   // For each vertex in the graph
+    for (int v = 0; v < V; ++v) {
+        // Create a boolean array for all possible lesser colors, all initialized to false.
+        int max = 10000;
+        bool lesserColors[max] = {false};  // Assumes MAX_COLOR is defined as the maximum possible color + 1.
+
+        Node* current = adjList[v].getHead(); // Get the head of the adjacency list for this vertex.
+
+        // Check the colors of the adjacent vertices.
+        while (current != nullptr) {
+            int adjacent = current->data; // The adjacent vertex.
+
+            // Check if an adjacent vertex has the same color - if so, it's not greedy.
+            if (colors[v] == colors[adjacent]) {
+                return false;
+            }
+
+            // If the color of the adjacent vertex is less than this vertex's color, record that.
+            if (colors[adjacent] < colors[v]) {
+                lesserColors[colors[adjacent]] = true;
+            }
+
+            current = current->next; // Move to the next adjacent vertex.
+        }
+
+        // Now check that all colors less than this vertex's color are present among the neighbors.
+        for (int i = 1; i < colors[v]; ++i) { // Start from 1 because there's no color less than 1.
+            if (!lesserColors[i]) {
+                // If any lesser color is not present among the neighbors, it's not a greedy coloring.
+                return false;
+            }
+        }
+    }
+
+    // If we've satisfied all the conditions, it's a greedy coloring.
+    return true;
 }
