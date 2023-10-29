@@ -18,18 +18,21 @@ class Sort {
 private:
     int tam; // Tamanho que pode ser usado para limitar operações ou como um limite superior
     void swap(Vertix *xp, Vertix *yp); // Função auxiliar para trocar dois vértices
+    void merge(Vertix* arr, int start, int mid, int end);
+    int partition(Vertix* arr, int low, int high); // função auxiliar 
+    void heapify(Vertix* arr, int n, int i); // função auxiliar
 
 public:
     Sort(int maxtam); // Construtor
     ~Sort(); // Destrutor
     void printVerticesByValue(Vertix* vertices, int numVertices); // Imprime os valores dos vértices
     void bubblesort(Vertix* arr, int n); // Método para ordenar usando Bubble Sort
-    void quicksort(Vertix* array); // Método para ordenar usando Quick Sort
-    void mergesort(Vertix* array, int start, int end); // Método para ordenar usando Merge Sort
-    void selectionsort(Vertix* array); // Método para ordenar usando Selection Sort
-    void insertionsort(Vertix* array); // Método para ordenar usando Insertion Sort
-    void heapsort(Vertix* array); // Método para ordenar usando Heap Sort
-    void customsort(Vertix* array); // Método para uma ordenação personalizada
+    void selectionsort(Vertix* arr, int n); // Método para ordenar usando Selection Sort
+    void insertionsort(Vertix* arr, int n); // Método para ordenar usando Insertion Sort
+    void mergesort(Vertix* arr, int start, int end); // Método para ordenar usando Merge Sort
+    void quicksort(Vertix* arr, int low, int high);  // Método para ordenar usando Quick Sort
+    void heapsort(Vertix* arr, int n); // Método para ordenar usando Heap Sort
+    void customsort(Vertix* arr, int n); // Método para uma ordenação personalizada
 };
 
 #endif // SORT_HPP
