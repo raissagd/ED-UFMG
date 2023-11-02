@@ -77,49 +77,49 @@ int Graph::getVertexColor(int v) {
 }
 
 bool Graph::isGreedy(int v, int c) {
+    // Se a cor for 1, é sempre guloso.
     if (c == 1) {
         return true;
     }
 
-    // se o grafo é completo, ele é guloso
-    if (numEdges() == maximumDegree()) {
+    // Verifica se o grafo é completo
+    if (numEdges() == (V * (V - 1)) / 2) {
         return true;
     }
 
-   // Para cada vértice no grafo
-    for (int v = 0; v < V; ++v) {
-        // Cria um array booleano para todas as cores menores possíveis, todas inicializadas como falsas.
-        int max = 10000; // Max de cores possiveis foi arbitrariamente escolhido
-        bool lesserColors[max] = {false};  
+    // Inicializa o array lesserColors
+    const int max = 10000;
+    bool lesserColors[max];
+    for (int i = 0; i < max; i++) {
+        lesserColors[i] = false;
+    }
 
-        Node* current = adjList[v].getHead(); // Pega a célula cabeça da lista de adjacência para este vértice.
+    Node* current = adjList[v].getHead(); // Pega o nó cabeça da lista de adjacência para o vértice v
 
-        // Verifica as cores dos vértices adjacentes.
-        while (current != nullptr) {
-            int adjacent = current->data; // O vértice adjacente.
+    // Verifica as cores dos vértices adjacentes
+    while (current != nullptr) {
+        int adjacent = current->data; // O vértice adjacente
 
-            // Verifica se um vértice adjacente tem a mesma cor - se sim, não é guloso.
-            if (colors[v] == colors[adjacent]) {
-                return false;
-            }
-
-            // Se a cor do vértice adjacente for menor que a cor deste vértice, registra isso.
-            if (colors[adjacent] < colors[v]) {
-                lesserColors[colors[adjacent]] = true;
-            }
-
-            current = current->next; // Move para o próximo vértice adjacente.
+        // Se um vértice adjacente tem a mesma cor, não é guloso.
+        if (c == colors[adjacent]) {
+            return false;
         }
 
-        // Agora verifica se todas as cores menores que a cor deste vértice estão presentes entre os vizinhos.
-        for (int i = 1; i < colors[v]; ++i) { // Começa de 1 porque não há cor menor que 1.
-            if (!lesserColors[i]) {
-                // Se alguma cor menor não estiver presente entre os vizinhos, não é uma coloração gulosa.
-                return false;
-            }
+        // Se a cor do vértice adjacente for menor que c, marque-a como true.
+        if (colors[adjacent] < c) {
+            lesserColors[colors[adjacent]] = true;
+        }
+
+        current = current->next; // Avança para o próximo vértice adjacente
+    }
+
+    // Verifica se todas as cores menores que c estão presentes entre os vizinhos
+    for (int i = 1; i < c; ++i) {
+        if (!lesserColors[i]) {
+            return false; // Se uma cor menor não estiver presente entre os vizinhos, não é uma coloração gulosa
         }
     }
 
-    // Se todas as condições foram satisfeitas, é uma coloração gulosa.
+    // Se todas as condições forem satisfeitas, é uma coloração gulosa.
     return true;
 }

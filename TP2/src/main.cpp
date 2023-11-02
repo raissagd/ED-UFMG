@@ -12,9 +12,10 @@
 #include <sstream> 
 
 int main(int argc, char* argv[]) {
-    std::string op = argv[1];  // Operação a ser realizada, informada na linha de comando.
-    int numV;
-    std::cin >> numV;  // Lendo o número de vértices.
+    std::string op; // Operação
+    int numV; // Num de vértices
+    std::cin >> op >> numV;    
+    
     Graph graph;
     Sort sort(numV);  // Criação do objeto de ordenação.
     Vertix* vertices = new Vertix[numV];  // Alocação dinâmica do array de vértices.
@@ -61,19 +62,19 @@ int main(int argc, char* argv[]) {
 
     // Ordenar o array de vértices primeiro, de acordo com as cores.
     // O método específico de ordenação é determinado pela opção passada na linha de comando.
-    if (op == "-b") {
+    if (op == "b") {
         sort.bubblesort(vertices, numV);  // Bubble sort.
-    } else if (op == "-s") {
+    } else if (op == "s") {
         sort.selectionsort(vertices, numV);  // Selection sort.
-    } else if (op == "-i") {
+    } else if (op == "i") {
         sort.insertionsort(vertices, numV);  // Insertion sort.
-    } else if (op == "-q") {
-        sort.quicksort(vertices, 0, numV - 1);  // Quicksort.
-    } else if (op == "-m") {
+    } else if (op == "q") {
+        sort.quicksort(vertices, 0, numV - 1);  // Quicksort. -------
+    } else if (op == "m") {
         sort.mergesort(vertices, 0, numV - 1);  // Mergesort.
-    } else if (op == "-p") {
-        sort.heapsort(vertices, numV);  // Heapsort.
-    } else if (op == "-y") {
+    } else if (op == "p") {
+        sort.heapsort(vertices, numV);  // Heapsort. --------
+    } else if (op == "y") {
         sort.customsort(vertices, numV);  // Método de ordenação personalizado.
     }
 

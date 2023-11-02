@@ -7,6 +7,7 @@
 
 #ifndef SORT_HPP
 #define SORT_HPP
+#include <cmath>
 
 // Uma estrutura representando um vértice com um item e uma cor associada.
 struct Vertix {
@@ -33,6 +34,7 @@ public:
     void quicksort(Vertix* arr, int low, int high);  // Método para ordenar usando Quick Sort
     void heapsort(Vertix* arr, int n); // Método para ordenar usando Heap Sort
     void customsort(Vertix* arr, int n); // Método para uma ordenação personalizada
+    void introsortHelper(Vertix* arr, int start, int end, int maxdepth);
 };
 
 #endif // SORT_HPP

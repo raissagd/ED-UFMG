@@ -1,8 +1,8 @@
 //---------------------------------------------------------------------
 // Arquivo      : sort.cpp
-// Conteudo     : Implementação dos métodos de ordenação
+// Conteúdo     : Implementação dos métodos de ordenação
 // Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
-// Historico    : 28/10/2023 - arquivo criado
+// Histórico    : 28/10/2023 - arquivo criado
 //---------------------------------------------------------------------
 
 #include "../include/sort.hpp"
@@ -13,9 +13,9 @@ Sort::Sort(int maxtam) {
     tam = maxtam; 
 }
 
-// Destrutor
+// Destruidor
 Sort::~Sort() {
-    // Nenhuma limpeza necessária pois não há alocação dinâmica de memória aqui
+    // Nenhuma limpeza necessária pois não há alocação dinâmica de memória
 }
 
 // Função para imprimir os vértices por valor
@@ -50,20 +50,20 @@ void Sort::bubblesort(Vertix* arr, int n) {
 // Implementação do algoritmo de ordenação Selection Sort
 void Sort::selectionsort(Vertix* arr, int n) {
     for (int i = 0; i < n - 1; i++) {
-        // Encontrar o mínimo elemento na matriz não ordenada
+        // Encontra o elemento mínimo no array não ordenado
         int min_idx = i;
         for (int j = i + 1; j < n; j++) {
-            if (arr[j].color < arr[min_idx].color) {
+            if (arr[j].color < arr[min_idx].color || 
+                (arr[j].color == arr[min_idx].color && j < min_idx)) {
                 min_idx = j; // Atualiza o índice do elemento mínimo
             }
         }
 
-        // Troca o elemento mínimo encontrado pelo primeiro elemento
-        Vertix temp = arr[min_idx];
-        arr[min_idx] = arr[i];
-        arr[i] = temp;
+        // Troca o elemento mínimo encontrado com o primeiro elemento
+        swap(&arr[min_idx], &arr[i]);
     }
 }
+
 
 // Implementação do algoritmo de ordenação Insertion Sort
 void Sort::insertionsort(Vertix* arr, int n) {
@@ -73,7 +73,7 @@ void Sort::insertionsort(Vertix* arr, int n) {
         key = arr[i]; // Elemento atual a ser comparado
         j = i - 1;
 
-        /* Mova elementos de arr[0..i-1] que são maiores que a chave,
+        /* Mova elementos de arr[0..i-1] que são maiores que a chave
         para uma posição à frente de sua posição atual */
         while (j >= 0 && arr[j].color > key.color) {
             arr[j + 1] = arr[j];
@@ -98,7 +98,7 @@ void Sort::merge(Vertix* arr, int start, int mid, int end) {
     for (int j = 0; j < n2; j++)
         R[j] = arr[mid + 1 + j];
 
-    // Combina os arrays temporários de volta em arr[start..end]
+    // Combina os arrays temporários de volta ao arr[start..end]
     int i = 0;
     int j = 0;
     int k = start;
@@ -147,49 +147,51 @@ void Sort::mergesort(Vertix* arr, int start, int end) {
 }
 
 int Sort::partition(Vertix* arr, int low, int high) {
-    Vertix pivot = arr[high];    // pivot
-    int i = (low - 1);  // Índice do elemento menor
+    Vertix pivot = arr[high]; // pivô
+    int i = (low - 1); // Índice do elemento menor
 
     for (int j = low; j <= high - 1; j++) {
-        // Se o elemento atual é menor que o pivot
-        if (arr[j].color < pivot.color) {
-            i++;    // incrementa o índice do elemento menor
-            std::swap(arr[i], arr[j]); // troca os elementos
+        // Se o elemento atual é menor que o pivô por cor ou igual em cor, mas menor em valor do item
+        if (arr[j].color < pivot.color || (arr[j].color == pivot.color && arr[j].item < pivot.item)) {
+            i++; // incrementa o índice do elemento menor
+            swap(&arr[i], &arr[j]);
         }
     }
-    std::swap(arr[i + 1], arr[high]); // coloca o pivot na posição correta
-    return (i + 1); // retorna a posição do pivot
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
 }
 
 void Sort::quicksort(Vertix* arr, int low, int high) {
     if (low < high) {
-        // pi é o índice de particionamento, arr[p] agora está no lugar certo
+        /* pi é o índice de particionamento, arr[pi] está no lugar certo */
         int pi = partition(arr, low, high);
 
-        // Ordena separadamente os elementos antes e depois do particionamento
+        // Ordena separadamente os elementos antes e depois da partição
         quicksort(arr, low, pi - 1);
         quicksort(arr, pi + 1, high);
     }
 }
 
 void Sort::heapify(Vertix* arr, int n, int i) {
-    int largest = i;  // Inicializa o maior como raiz
-    int left = 2 * i + 1;  // left = 2*i + 1 (filho à esquerda)
-    int right = 2 * i + 2;  // right = 2*i + 2 (filho à direita)
+    int largest = i; // Inicializa o maior como raiz
+    int left = 2 * i + 1; // índice do filho à esquerda = 2*i + 1
+    int right = 2 * i + 2; // índice do filho à direita = 2*i + 2
 
     // Se o filho da esquerda for maior que a raiz
-    if (left < n && arr[left].color > arr[largest].color)
+    if (left < n && (arr[left].color > arr[largest].color || 
+        (arr[left].color == arr[largest].color && left < largest)))
         largest = left;
 
     // Se o filho da direita for maior que o maior até agora
-    if (right < n && arr[right].color > arr[largest].color)
+    if (right < n && (arr[right].color > arr[largest].color ||
+        (arr[right].color == arr[largest].color && right < largest)))
         largest = right;
 
-    // Se o maior não for a raiz
+    // Se o maior não for raiz
     if (largest != i) {
-        std::swap(arr[i], arr[largest]); // troca a raiz pelo maior
+        swap(&arr[i], &arr[largest]); // Troca o raiz com o maior se necessário
 
-        // Aplica heapify recursivamente na sub-árvore afetada
+        // Heapifica recursivamente a subárvore afetada
         heapify(arr, n, largest);
     }
 }
@@ -209,6 +211,20 @@ void Sort::heapsort(Vertix* arr, int n) {
     }
 }
 
+// Função personalizada para ordenação que usa Introsort
 void Sort::customsort(Vertix* arr, int n) {
-    // to do
+    introsortHelper(arr, 0, n - 1, 2 * log(n)); // Chama o assistente de introsort com profundidade máxima baseada no logaritmo do número de elementos
+}
+
+// Assistente recursivo para a execução do Introsort
+void Sort::introsortHelper(Vertix* arr, int start, int end, int maxdepth) {
+    if (end - start < 16) {
+        insertionsort(arr + start, end - start + 1); // Insertion Sort para pequenas partições
+    } else if (maxdepth == 0) {
+        heapsort(arr + start, end - start + 1); // Heap Sort se a profundidade de recursão for muito alta
+    } else {
+        int pivot = partition(arr, start, end); // Calcula o pivô para a partição
+        introsortHelper(arr, start, pivot - 1, maxdepth - 1); // Ordena os elementos antes do pivô
+        introsortHelper(arr, pivot + 1, end, maxdepth - 1); // Ordena os elementos depois do pivô
+    }
 }
