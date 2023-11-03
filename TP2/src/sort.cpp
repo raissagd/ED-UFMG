@@ -228,3 +228,32 @@ void Sort::introsortHelper(Vertix* arr, int start, int end, int maxdepth) {
         introsortHelper(arr, pivot + 1, end, maxdepth - 1); // Ordena os elementos depois do pivô
     }
 }
+
+void Sort::method(int numV, Vertix* arr, char op) {
+    switch (op) { // switch on the first character of the 'op' string
+    case 'b':
+        bubblesort(arr, numV);  // Bubble sort.
+        break;
+    case 's':
+        selectionsort(arr, numV);  // Selection sort.
+        break;
+    case 'i':
+        insertionsort(arr, numV);  // Insertion sort.
+        break;
+    case 'q':
+        quicksort(arr, 0, numV - 1);  // Quicksort.
+        break;
+    case 'm':
+        mergesort(arr, 0, numV - 1);  // Mergesort.
+        break;
+    case 'p':
+        heapsort(arr, numV);  // Heapsort.
+        break;
+    case 'y':
+        customsort(arr, numV);  // Custom sort.
+        break;
+    default:
+        std::cerr << "Opção de ordenação inválida." << std::endl;
+        break;
+    }
+}

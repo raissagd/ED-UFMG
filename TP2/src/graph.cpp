@@ -7,119 +7,117 @@
 
 #include "../include/graph.hpp"
 
-Graph::Graph() : V(0), adjList(nullptr) {
-    colors = new int[V]; // inicializa com o número de vértices
-    for (int i = 0; i < V; i++)
-        colors[i] = -1; // valor padrão para cor
-}
+Graph::Graph() : numVertices(0), colors(nullptr), adjList(nullptr) {}
 
 Graph::~Graph() {
+    for (int i = 0; i < numVertices; ++i) {
+        Node* current = adjList[i];
+        while (current != nullptr) {
+            Node* temp = current;
+            current = current->next;
+            delete temp;
+        }
+    }
     delete[] adjList;
-    delete[] colors; 
+    delete[] colors;  // Delete the colors array
 }
 
 void Graph::insertVertex() {
-    LinkedList* newAdjList = new LinkedList[V + 1]; // Cria um novo array de listas ligadas com um espaço adicional para o novo vértice
+    Node** newAdjList = new (std::nothrow) Node*[numVertices + 1];
+    if (newAdjList) {
+        for (int i = 0; i < numVertices; ++i) {
+            newAdjList[i] = adjList[i];
+        }
+        newAdjList[numVertices] = nullptr;
 
-    // Copia listas de adjacências existentes para o novo array
-    for (int i = 0; i < V; ++i) {
-        newAdjList[i] = adjList[i]; // Isso presume que você tenha um construtor de cópia ou um método apropriado em LinkedList para lidar com esta operação.
+        delete[] adjList;
+        adjList = newAdjList;
+        numVertices++;
+
+         // Resize the color array
+        int* newColors = new int[numVertices];
+        for (int i = 0; i < numVertices - 1; ++i) {
+            newColors[i] = colors[i];
+        }
+        newColors[numVertices - 1] = -1;
+        delete[] colors;
+        colors = newColors;
     }
-
-    delete[] adjList; // Deleta o array antigo
-    adjList = newAdjList; // Aponta para o novo array
-    ++V; // Aumenta o número de vértices
 }
 
 void Graph::insertEdge(int v, int w) {
-    if (v < V && w < V) { // verifica se os vértices existem
-        adjList[v].insert(w); // adiciona w à lista de v, mas não v à lista de w
+    if (v >= 0 && v < numVertices && w >= 0 && w < numVertices) {
+        Node* newNode = new Node{w, -1, nullptr};
+        newNode->next = adjList[v];
+        adjList[v] = newNode;
     }
 }
 
-int Graph::numVertices() {
-    return V;
+int Graph::getNumberOfVertices() const {
+    return numVertices;
 }
 
-int Graph::numEdges() {
-    int totalArestas = 0;
-    for (int i = 0; i < V; ++i) {
-        totalArestas += adjList[i].size(); // Presume-se que 'size' forneça o número de elementos na lista ligada
-    }
-    return totalArestas / 2; // Cada aresta é contada duas vezes, então dividimos por 2.
-}
-
-int Graph::maximumDegree() {
-    int maxDegree = 0; // Inicialmente, define como 0
-
-    // Itera por todos os vértices
-    for (int i = 0; i < V; ++i) {
-        int grauAtual = adjList[i].size();
-        if (grauAtual > maxDegree) {
-            maxDegree = grauAtual; // Atualiza maxDegree se o atual for maior
+int Graph::getNumberOfEdges() const {
+    int edgeCount = 0;
+    for (int i = 0; i < numVertices; ++i) {
+        for (Node* current = adjList[i]; current != nullptr; current = current->next) {
+            edgeCount++;
         }
     }
+    return edgeCount / 2; // Since every edge is counted twice
+}
 
-    return maxDegree;
+void Graph::printNeighbors(int v) const {
+    if (v >= 0 && v < numVertices) {
+        Node* current = adjList[v];
+        while (current != nullptr) {
+            std::cout << current->data << " ";
+            current = current->next;
+        }
+        std::cout << std::endl;
+    }
 }
 
 void Graph::addColor(int v, int c) {
-    if (v >= 0 && v < V) {
+    if (v >= 0 && v < numVertices) {  // Use numVertices instead of V
         colors[v] = c;
     }
 }
 
-int Graph::getVertexColor(int v) {
-    if (v >= 0 && v < V) {
-        return colors[v];
-    }
-    return -1; // cor inválida
-}
-
 bool Graph::isGreedy(int v, int c) {
-    // Se a cor for 1, é sempre guloso.
-    if (c == 1) {
-        return true;
+    if (v < 0 || v >= numVertices) {
+        return false; // Invalid vertex number
+    }
+    
+    // Get the color of vertex v
+    int vertexColor = colors[v];
+    
+    // If the vertex has no color or the color is greater than 'c', it cannot be part of a greedy coloring.
+    if (vertexColor == -1 || vertexColor > c) {
+        return false;
     }
 
-    // Verifica se o grafo é completo
-    if (numEdges() == (V * (V - 1)) / 2) {
-        return true;
-    }
-
-    // Inicializa o array lesserColors
-    const int max = 10000;
-    bool lesserColors[max];
-    for (int i = 0; i < max; i++) {
-        lesserColors[i] = false;
-    }
-
-    Node* current = adjList[v].getHead(); // Pega o nó cabeça da lista de adjacência para o vértice v
-
-    // Verifica as cores dos vértices adjacentes
-    while (current != nullptr) {
-        int adjacent = current->data; // O vértice adjacente
-
-        // Se um vértice adjacente tem a mesma cor, não é guloso.
-        if (c == colors[adjacent]) {
+    // For each color 'i' less than 'vertexColor'
+    for (int i = 1; i < vertexColor; ++i) {
+        bool colorFound = false;
+        
+        // Check the neighbors of 'v'
+        for (Node* current = adjList[v]; current != nullptr; current = current->next) {
+            int neighborColor = colors[current->data];
+            
+            // If a neighbor has color 'i', set colorFound to true and break
+            if (neighborColor == i) {
+                colorFound = true;
+                break;
+            }
+        }
+        
+        // If we didn't find a neighbor with color 'i', it's not a greedy coloring
+        if (!colorFound) {
             return false;
         }
-
-        // Se a cor do vértice adjacente for menor que c, marque-a como true.
-        if (colors[adjacent] < c) {
-            lesserColors[colors[adjacent]] = true;
-        }
-
-        current = current->next; // Avança para o próximo vértice adjacente
     }
 
-    // Verifica se todas as cores menores que c estão presentes entre os vizinhos
-    for (int i = 1; i < c; ++i) {
-        if (!lesserColors[i]) {
-            return false; // Se uma cor menor não estiver presente entre os vizinhos, não é uma coloração gulosa
-        }
-    }
-
-    // Se todas as condições forem satisfeitas, é uma coloração gulosa.
+    // If all conditions are satisfied, then it's a greedy coloring
     return true;
 }

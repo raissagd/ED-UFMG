@@ -17,16 +17,7 @@ struct Vertix {
 
 class Sort {
 private:
-    int tam; // Tamanho que pode ser usado para limitar operações ou como um limite superior
-    void swap(Vertix *xp, Vertix *yp); // Função auxiliar para trocar dois vértices
-    void merge(Vertix* arr, int start, int mid, int end);
-    int partition(Vertix* arr, int low, int high); // função auxiliar 
-    void heapify(Vertix* arr, int n, int i); // função auxiliar
-
-public:
-    Sort(int maxtam); // Construtor
-    ~Sort(); // Destrutor
-    void printVerticesByValue(Vertix* vertices, int numVertices); // Imprime os valores dos vértices
+    int tam; // Tamanho que pode ser usado para limitar operações ou como um limite superio
     void bubblesort(Vertix* arr, int n); // Método para ordenar usando Bubble Sort
     void selectionsort(Vertix* arr, int n); // Método para ordenar usando Selection Sort
     void insertionsort(Vertix* arr, int n); // Método para ordenar usando Insertion Sort
@@ -35,6 +26,17 @@ public:
     void heapsort(Vertix* arr, int n); // Método para ordenar usando Heap Sort
     void customsort(Vertix* arr, int n); // Método para uma ordenação personalizada
     void introsortHelper(Vertix* arr, int start, int end, int maxdepth);
+
+    // funções auxiliares
+    void swap(Vertix *xp, Vertix *yp); // Função auxiliar para trocar dois vértices
+    void merge(Vertix* arr, int start, int mid, int end);
+    int partition(Vertix* arr, int low, int high); // função auxiliar 
+    void heapify(Vertix* arr, int n, int i); // função auxiliar
+public:
+    Sort(int maxtam); // Construtor
+    ~Sort(); // Destrutor
+    void method(int numV, Vertix* arr, char op);
+    void printVerticesByValue(Vertix* vertices, int numVertices); // Imprime os valores dos vértices
 };
 
 #endif // SORT_HPP
