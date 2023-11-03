@@ -230,7 +230,7 @@ void Sort::introsortHelper(Vertix* arr, int start, int end, int maxdepth) {
 }
 
 void Sort::method(int numV, Vertix* arr, char op) {
-    switch (op) { // switch on the first character of the 'op' string
+    switch (op) {
     case 'b':
         bubblesort(arr, numV);  // Bubble sort.
         break;

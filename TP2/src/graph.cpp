@@ -18,8 +18,8 @@ Graph::~Graph() {
             delete temp;
         }
     }
-    delete[] adjList;
-    delete[] colors;  // Delete the colors array
+    delete[] adjList; // Deletando a lista de adjacência
+    delete[] colors;  // Deletando o array de cores
 }
 
 void Graph::insertVertex() {
@@ -34,12 +34,12 @@ void Graph::insertVertex() {
         adjList = newAdjList;
         numVertices++;
 
-         // Resize the color array
+         // Redimensiona o array de cores
         int* newColors = new int[numVertices];
         for (int i = 0; i < numVertices - 1; ++i) {
             newColors[i] = colors[i];
         }
-        newColors[numVertices - 1] = -1;
+        newColors[numVertices - 1] = -1; // Inicializa a nova cor com um valor inválido
         delete[] colors;
         colors = newColors;
     }
@@ -47,31 +47,31 @@ void Graph::insertVertex() {
 
 void Graph::insertEdge(int v, int w) {
     if (v >= 0 && v < numVertices && w >= 0 && w < numVertices) {
-        Node* newNode = new Node{w, -1, nullptr};
-        newNode->next = adjList[v];
-        adjList[v] = newNode;
+        Node* newNode = new Node{w, -1, nullptr}; // Criando novo nó
+        newNode->next = adjList[v]; // Inserindo no início da lista
+        adjList[v] = newNode; // Atualizando o ponteiro da lista de adjacência
     }
 }
 
 int Graph::getNumberOfVertices() const {
-    return numVertices;
+    return numVertices; // Retorna o número de vértices
 }
 
 int Graph::getNumberOfEdges() const {
     int edgeCount = 0;
     for (int i = 0; i < numVertices; ++i) {
         for (Node* current = adjList[i]; current != nullptr; current = current->next) {
-            edgeCount++;
+            edgeCount++; // Conta as arestas
         }
     }
-    return edgeCount / 2; // Since every edge is counted twice
+    return edgeCount / 2; // Como cada aresta é contada duas vezes
 }
 
 void Graph::printNeighbors(int v) const {
     if (v >= 0 && v < numVertices) {
         Node* current = adjList[v];
         while (current != nullptr) {
-            std::cout << current->data << " ";
+            std::cout << current->data << " "; // Imprimindo os vizinhos
             current = current->next;
         }
         std::cout << std::endl;
@@ -79,45 +79,45 @@ void Graph::printNeighbors(int v) const {
 }
 
 void Graph::addColor(int v, int c) {
-    if (v >= 0 && v < numVertices) {  // Use numVertices instead of V
-        colors[v] = c;
+    if (v >= 0 && v < numVertices) {
+        colors[v] = c; // Atribui a cor ao vértice
     }
 }
 
 bool Graph::isGreedy(int v, int c) {
     if (v < 0 || v >= numVertices) {
-        return false; // Invalid vertex number
+        return false; // Número de vértice inválido
     }
     
-    // Get the color of vertex v
+    // Obtém a cor do vértice v
     int vertexColor = colors[v];
     
-    // If the vertex has no color or the color is greater than 'c', it cannot be part of a greedy coloring.
+    // Se o vértice não tem cor ou a cor é maior que 'c', ele não pode fazer parte de uma coloração gulosa.
     if (vertexColor == -1 || vertexColor > c) {
         return false;
     }
 
-    // For each color 'i' less than 'vertexColor'
+    // Para cada cor 'i' menor que 'vertexColor'
     for (int i = 1; i < vertexColor; ++i) {
         bool colorFound = false;
         
-        // Check the neighbors of 'v'
+        // Verifica os vizinhos de 'v'
         for (Node* current = adjList[v]; current != nullptr; current = current->next) {
             int neighborColor = colors[current->data];
             
-            // If a neighbor has color 'i', set colorFound to true and break
+            // Se um vizinho tem a cor 'i', define colorFound como true e interrompe
             if (neighborColor == i) {
                 colorFound = true;
                 break;
             }
         }
         
-        // If we didn't find a neighbor with color 'i', it's not a greedy coloring
+        // Se não encontramos um vizinho com a cor 'i', não é uma coloração gulosa
         if (!colorFound) {
             return false;
         }
     }
 
-    // If all conditions are satisfied, then it's a greedy coloring
+    // Se todas as condições forem satisfeitas, então é uma coloração gulosa
     return true;
 }
