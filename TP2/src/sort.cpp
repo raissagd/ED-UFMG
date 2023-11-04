@@ -213,19 +213,19 @@ void Sort::heapsort(Vertix* arr, int n) {
 
 // Função personalizada para ordenação que usa Introsort
 void Sort::customsort(Vertix* arr, int n) {
-    introsortHelper(arr, 0, n - 1, 2 * log(n)); // Chama o assistente de introsort com profundidade máxima baseada no logaritmo do número de elementos
+    customSortHelper(arr, 0, n - 1, 2 * log(n)); // Chama o assistente de introsort com profundidade máxima baseada no logaritmo do número de elementos
 }
 
 // Assistente recursivo para a execução do Introsort
-void Sort::introsortHelper(Vertix* arr, int start, int end, int maxdepth) {
-    if (end - start < 16) {
+void Sort::customSortHelper(Vertix* arr, int start, int end, int maxdepth) {
+    if (end - start < 32) {
         insertionsort(arr + start, end - start + 1); // Insertion Sort para pequenas partições
     } else if (maxdepth == 0) {
         heapsort(arr + start, end - start + 1); // Heap Sort se a profundidade de recursão for muito alta
     } else {
         int pivot = partition(arr, start, end); // Calcula o pivô para a partição
-        introsortHelper(arr, start, pivot - 1, maxdepth - 1); // Ordena os elementos antes do pivô
-        introsortHelper(arr, pivot + 1, end, maxdepth - 1); // Ordena os elementos depois do pivô
+        customSortHelper(arr, start, pivot - 1, maxdepth - 1); // Ordena os elementos antes do pivô
+        customSortHelper(arr, pivot + 1, end, maxdepth - 1); // Ordena os elementos depois do pivô
     }
 }
 

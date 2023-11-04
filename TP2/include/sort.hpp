@@ -24,18 +24,19 @@ private:
     void mergesort(Vertix* arr, int start, int end); // Método para ordenar usando Merge Sort
     void quicksort(Vertix* arr, int low, int high);  // Método para ordenar usando Quick Sort
     void heapsort(Vertix* arr, int n); // Método para ordenar usando Heap Sort
-    void customsort(Vertix* arr, int n); // Método para uma ordenação personalizada
-    void introsortHelper(Vertix* arr, int start, int end, int maxdepth);
+    void customsort(Vertix* arr, int n); // Método customizado
 
     // funções auxiliares
     void swap(Vertix *xp, Vertix *yp); // Função auxiliar para trocar dois vértices
-    void merge(Vertix* arr, int start, int mid, int end);
+    void merge(Vertix* arr, int start, int mid, int end); // função auxiliar do mergesort
     int partition(Vertix* arr, int low, int high); // função auxiliar 
-    void heapify(Vertix* arr, int n, int i); // função auxiliar
+    void heapify(Vertix* arr, int n, int i); // função auxiliar do heapsort
+    void customSortHelper(Vertix* arr, int start, int end, int maxdepth);  // Método auxiliar customizado
+
 public:
     Sort(int maxtam); // Construtor
     ~Sort(); // Destrutor
-    void method(int numV, Vertix* arr, char op);
+    void method(int numV, Vertix* arr, char op); // Função para aplicar a ordenação baseada na operação escolhida
     void printVerticesByValue(Vertix* vertices, int numVertices); // Imprime os valores dos vértices
 };
 
