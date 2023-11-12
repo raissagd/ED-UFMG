@@ -53,33 +53,37 @@ void Sort::selectionsort(Vertix* arr, int n) {
         // Encontra o elemento mínimo no array não ordenado
         int min_idx = i;
         for (int j = i + 1; j < n; j++) {
+            // Verifica se arr[j] deve ser o novo mínimo
             if (arr[j].color < arr[min_idx].color || 
-                (arr[j].color == arr[min_idx].color && j < min_idx)) {
+                (arr[j].color == arr[min_idx].color && arr[j].item < arr[min_idx].item)) {
                 min_idx = j; // Atualiza o índice do elemento mínimo
             }
         }
 
-        // Troca o elemento mínimo encontrado com o primeiro elemento
-        swap(&arr[min_idx], &arr[i]);
+        // Desloca os elementos do array para manter a estabilidade
+        Vertix min = arr[min_idx];
+        while (min_idx > i) {
+            arr[min_idx] = arr[min_idx - 1];
+            min_idx--;
+        }
+        arr[i] = min;
     }
 }
-
 
 // Implementação do algoritmo de ordenação Insertion Sort
 void Sort::insertionsort(Vertix* arr, int n) {
     Vertix key;
     int j;
     for (int i = 1; i < n; i++) {
-        key = arr[i]; // Elemento atual a ser comparado
+        key = arr[i];
         j = i - 1;
 
-        /* Mova elementos de arr[0..i-1] que são maiores que a chave
-        para uma posição à frente de sua posição atual */
-        while (j >= 0 && arr[j].color > key.color) {
+        // Move elementos de arr[0..i-1], que são maiores do que a chave, para uma posição à frente
+        while (j >= 0 && (arr[j].color > key.color || (arr[j].color == key.color && arr[j].item > key.item))) {
             arr[j + 1] = arr[j];
             j = j - 1;
         }
-        arr[j + 1] = key; // Coloca a chave na posição correta
+        arr[j + 1] = key;
     }
 }
 
@@ -163,7 +167,7 @@ int Sort::partition(Vertix* arr, int low, int high) {
 
 void Sort::quicksort(Vertix* arr, int low, int high) {
     if (low < high) {
-        /* pi é o índice de particionamento, arr[pi] está no lugar certo */
+        //pi é o índice de particionamento, arr[pi] está no lugar certo 
         int pi = partition(arr, low, high);
 
         // Ordena separadamente os elementos antes e depois da partição
@@ -173,23 +177,23 @@ void Sort::quicksort(Vertix* arr, int low, int high) {
 }
 
 void Sort::heapify(Vertix* arr, int n, int i) {
-    int largest = i; // Inicializa o maior como raiz
-    int left = 2 * i + 1; // índice do filho à esquerda = 2*i + 1
-    int right = 2 * i + 2; // índice do filho à direita = 2*i + 2
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
 
     // Se o filho da esquerda for maior que a raiz
-    if (left < n && (arr[left].color > arr[largest].color || 
-        (arr[left].color == arr[largest].color && left < largest)))
+    if (left < n && (arr[left].color > arr[largest].color ||
+        (arr[left].color == arr[largest].color && arr[left].item > arr[largest].item)))
         largest = left;
 
     // Se o filho da direita for maior que o maior até agora
     if (right < n && (arr[right].color > arr[largest].color ||
-        (arr[right].color == arr[largest].color && right < largest)))
+        (arr[right].color == arr[largest].color && arr[right].item > arr[largest].item)))
         largest = right;
 
     // Se o maior não for raiz
     if (largest != i) {
-        swap(&arr[i], &arr[largest]); // Troca o raiz com o maior se necessário
+        swap(&arr[i], &arr[largest]);
 
         // Heapifica recursivamente a subárvore afetada
         heapify(arr, n, largest);
@@ -204,7 +208,7 @@ void Sort::heapsort(Vertix* arr, int n) {
     // Extrai os elementos do heap um por um
     for (int i = n - 1; i > 0; i--) {
         // Move a raiz atual para o fim
-        std::swap(arr[0], arr[i]);
+        swap(&arr[0], &arr[i]);
 
         // chama max heapify no heap reduzido
         heapify(arr, i, 0);
