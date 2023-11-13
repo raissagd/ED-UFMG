@@ -1,12 +1,12 @@
 CC = gcc
-LIBS = -lm -lrt # Add -lrt here to link with the real-time library
+LIBS = -lm
 SRC = src
 OBJ = obj
 INC = include
 BIN = bin
 TARGET = $(BIN)/pa9.out
 OBJS = $(OBJ)/main.o 
-CFLAGS = -Wall -pg -g -c -I$(INC) -D_POSIX_C_SOURCE=199309L
+CFLAGS =  -pg -g -c -I$(INC)
 
 EXE = $(BIN)/pa9.out
 

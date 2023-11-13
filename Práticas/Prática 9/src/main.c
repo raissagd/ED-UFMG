@@ -137,54 +137,59 @@ void swap(int *xp, int *yp, sortperf_t *s){
     incmove(s,3);
 }
 
-// Função para manter a propriedade do heap
-void heapify(int *A, int n, int i, sortperf_t *s) {
-    int largest = i; // Inicializa o maior como raiz
-    int l = 2 * i + 1; // esquerda = 2*i + 1
-    int r = 2 * i + 2; // direita = 2*i + 2
+// heapify
+void heapify(int* A, int l, int r, sortperf_t* s) {
+  // Descrição: Reorganiza o vetor A para manter a propriedade de heap
+  // Entrada: A, l, r, s
+  // Saída: A modificado
+  inccalls(s, 1);
+  int i = l;
+  int j = i * 2;
+  incmove(s, 1);
+  int x = A[i];
 
-    // Se o filho esquerdo é maior que a raiz
-    if (l < n) {
-        inccmp(s, 1); // Incrementa o contador de comparações
-        if (A[l] > A[largest])
-            largest = l;
+  while (j <= r) {
+    if (j < r) {
+      inccmp(s, 1);
+      if (A[j] < A[j + 1]) {
+        j++;
+      }
     }
 
-    // Se o filho direito é maior que o maior até agora
-    if (r < n) {
-        inccmp(s, 1); // Incrementa o contador de comparações
-        if (A[r] > A[largest])
-            largest = r;
+    inccmp(s, 1);
+    if (x >= A[j]) {
+      break;
     }
 
-    // Se o maior não é a raiz
-    if (largest != i) {
-        swap(&A[i], &A[largest], s); // Troca A[i] com A[largest]
-        heapify(A, n, largest, s); // Recursivamente heapify a subárvore afetada
+    incmove(s, 1);
+    A[i] = A[j];
+    i = j;
+    j = i * 2;
+  }
+
+  incmove(s, 1);
+  A[i] = x;
+}
+
+void buildheap(int* A, int n, sortperf_t* s) {
+    // Descrição: Constrói um heap a partir de um vetor desordenado
+    // Entrada: A, n, s
+    // Saída: A modificado como heap
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(A, i, n, s);
     }
 }
 
-// Função para construir um heap a partir de um array
-void buildheap(int *A, int n, sortperf_t * s) {
-    // Índice do último nó não-folha
-    int startIdx = (n / 2) - 1;
+void heapSort(int* A, int n, sortperf_t* s) {
+    // Descrição: Realiza a ordenação por heap sort
+    // Entrada: A, n, s
+    // Saída: A ordenado
+    inccalls(s, 2);
+    buildheap(A, n, s);
 
-    // Perform reverse level order traversal from last non-leaf node and heapify each node
-    for (int i = startIdx; i >= 0; i--) {
-        heapify(A, n, i, s);
-    }
-}
-
-// Função principal para realizar o Heap Sort
-void heapSort(int *A, int n, sortperf_t * s) {
-    buildheap(A, n, s); // Constrói um heap
-
-    // Um por um, extrai um elemento do heap
     for (int i = n - 1; i > 0; i--) {
-        // Move a raiz atual para o final
-        swap(&A[0], &A[i], s); // Troca A[0] com A[i]
-        // Chama a função heapify no heap reduzido
-        heapify(A, i, 0, s);
+        swap(&A[0], &A[i], s);
+        heapify(A, 0, i, s);
     }
 }
 
@@ -214,43 +219,44 @@ void recursiveSelectionSort(int arr[], int l, int r, sortperf_t * s)
 }
 
 // selection sort
-void selectionSort(int arr[], int l, int r, sortperf_t * s) {
-  int i, j, min_idx;
+void selectionSort(int arr[], int l, int r, sortperf_t* s) {
+  inccalls(s, 1);
 
-  // Percorre todos os elementos do array
-  for (i = l; i < r; i++) {
-    // Encontra o menor elemento no array não ordenado
-    min_idx = i;
-    for (j = i+1; j <= r; j++) {
-      inccmp(s, 1); // Contabiliza uma comparação
-      if (arr[j] < arr[min_idx]) {
-        min_idx = j;
+  for (int i = l; i < r; i++) {
+    int min_index = i;
+    for (int j = i + 1; j <= r; j++) {
+      inccmp(s, 1);
+
+      if (arr[j] < arr[min_index]) {
+        min_index = j;
       }
     }
 
-    // Troca o elemento encontrado com o primeiro elemento
-    if (min_idx != i) {
-      swap(&arr[min_idx], &arr[i], s);
+    if (min_index != i) {
+      swap(&arr[i], &arr[min_index], s);
     }
   }
 }
 
 //insertion sort
-void insertionSort(int v[], int l, int r, sortperf_t * s) {
-  int i, key, j;
-  for (i = l + 1; i <= r; i++) {
-    key = v[i];
-    j = i - 1;
+void insertionSort(int v[], long long int l, long long int r, sortperf_t* s) {
+  inccalls(s, 1);
 
-    // Mova os elementos de `v[0..i-1]`, que são maiores que `key`, para uma posição à frente de sua posição atual
+  for (long long int i = l + 1; i <= r; i++) {
+    incmove(s, 1);
+    long long int key = v[i];
+    long long int j = i - 1;
+    inccmp(s, 1);
+
     while (j >= l && v[j] > key) {
-      inccmp(s, 1); // Contabiliza uma comparação
+      inccmp(s, 1);
+      incmove(s, 1);
       v[j + 1] = v[j];
-      incmove(s, 1); // Contabiliza uma movimentação
-      j = j - 1;
+      j--;
     }
+
+    incmove(s, 1);
     v[j + 1] = key;
-    incmove(s, 1); // Contabiliza uma movimentação
   }
 }
 
@@ -264,111 +270,115 @@ int median (int a, int b, int c) {
     return b;                            // c b a
 }
 
-// quicksort partition using median of 3
-void partition3(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
-    // Escolhe a mediana de três como pivô
-    int mid = l + (r - l) / 2;
-    int p = median(A[l], A[mid], A[r]);
-    *i = l;
-    *j = r;
-    while (1) {
-        // Incrementa i até encontrar um elemento maior ou igual ao pivô
-        while (A[*i] < p) {
-            inccmp(s, 1); // contabiliza comparação
-            (*i)++;
-        }
-        // Decrementa j até encontrar um elemento menor ou igual ao pivô
-        while (A[*j] > p) {
-            inccmp(s, 1); // contabiliza comparação
-            (*j)--;
-        }
-        if (*i >= *j) break; // se os índices se cruzaram, a partição está completa
-        swap(&A[*i], &A[*j], s); // troca os elementos
-        if (A[*i] == p) { // se algum dos elementos trocados é igual ao pivô
-            mid = (*i);
-        } else if (A[*j] == p) {
-            mid = (*j);
-        }
-        (*i)++;
-        (*j)--;
-    }
-    // Garante que o pivô está no seu lugar final
-    if (A[mid] == p) {
-        swap(&A[mid], &A[*j], s);
-    } else if (A[*i] == p) {
-        swap(&A[*i], &A[*j], s);
-    }
-}
-
 // standard quicksort partition
-void partition(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
-    int p = A[l]; // escolhe o primeiro elemento como pivô
-    *i = l;
-    *j = r;
-    while (1) {
-        // Incrementa i até encontrar um elemento maior que o pivô
-        while (A[*i] < p) {
-            inccmp(s, 1); // contabiliza comparação
-            (*i)++;
-        }
-        // Decrementa j até encontrar um elemento menor que o pivô
-        while (A[*j] > p) {
-            inccmp(s, 1); // contabiliza comparação
-            (*j)--;
-        }
-        if (*i >= *j) break; // se os índices se cruzaram, a partição está completa
-        swap(&A[*i], &A[*j], s); // troca os elementos
-        (*i)++;
-        (*j)--;
+void partition(int* A, int l, int r, int* i, int* j, sortperf_t* s) {
+  *i = l;
+  *j = r;
+
+  int x = A[(*i + *j) / 2]; 
+
+  do {
+    inccmp(s, 1);
+
+    while (A[*i] < x) {
+      inccmp(s, 1);
+      (*i)++;
     }
+
+    inccmp(s, 1);
+
+    while (A[*j] > x) {
+      inccmp(s, 1);
+      (*j)--;
+    }
+
+    if (*i <= *j) {
+      swap(&A[*i], &A[*j], s);
+      (*i)++;
+      (*j)--;
+    }
+
+  } while (*i <= *j);
 }
 
-
-// standard quicksort
-void quickSort(int *A, int l, int r, sortperf_t *s) {
+// QuickSort padrão
+void quickSort(int* A, int l, int r, sortperf_t* s) {
     if (l < r) {
         int i, j;
-        partition(A, l, r, &i, &j, s); // Particiona o array
-        quickSort(A, l, j, s);         // Ordena a parte esquerda
-        quickSort(A, j + 1, r, s);     // Ordena a parte direita
+        inccalls(s, 2);
+        partition(A, l, r, &i, &j, s);
+        quickSort(A, l, j, s);
+        quickSort(A, i, r, s);
     }
 }
 
-// quicksort with median of 3
-void quickSort3(int *A, int l, int r, sortperf_t *s) {
+// Função de partição com mediana de três
+void partition3(int* A, int l, int r, int* i, int* j, sortperf_t* s) {
+  *i = l;
+  *j = r;
+  int x = median(A[l], A[(*i + *j) / 2], A[r]);
+
+  do {
+    inccmp(s, 1);
+
+    while (A[*i] < x) {
+      inccmp(s, 1);
+      (*i)++;
+    }
+
+    inccmp(s, 1);
+
+    while (A[*j] > x) {
+      inccmp(s, 1);
+      (*j)--;
+    }
+
+    if (*i <= *j) {
+      swap(&A[*i], &A[*j], s);
+      (*i)++;
+      (*j)--;
+    }
+
+  } while (*i <= *j);
+}
+
+// QuickSort com mediana de três
+void quickSort3(int* A, int l, int r, sortperf_t* s) {
     if (l < r) {
         int i, j;
-        partition3(A, l, r, &i, &j, s); // Particiona o array com mediana de três
-        quickSort3(A, l, j, s);         // Ordena a parte esquerda
-        quickSort3(A, j + 1, r, s);     // Ordena a parte direita
+        partition3(A, l, r, &i, &j, s);
+        inccalls(s, 2);
+        quickSort3(A, l, j, s);
+        quickSort3(A, i, r, s);
     }
 }
 
-// quicksort with insertion for small partitions
-void quickSortIns(int *A, int l, int r, sortperf_t *s) {
-    const int threshold = 10; // Limite para usar insertion sort
+// QuickSort com inserção para partições pequenas
+void quickSortIns(int* A, int l, int r, sortperf_t* s) {
     if (l < r) {
-        if (r - l < threshold) {
-            insertionSort(A, l, r, s); // Usa insertion sort para pequenos sub-arrays
+        if (r - l <= 50) {
+            insertionSort(A, l, r, s); // Uso do Insertion Sort para pequenas partições
         } else {
             int i, j;
-            partition(A, l, r, &i, &j, s); // Particiona o array
-            quickSortIns(A, l, j, s);      // Ordena a parte esquerda
-            quickSortIns(A, j + 1, r, s);  // Ordena a parte direita
+            partition(A, l, r, &i, &j, s);
+            inccalls(s, 2);
+            quickSortIns(A, l, j, s);
+            quickSortIns(A, i, r, s);
         }
     }
 }
-// quicksort with insertion for small partitions and median of 3
-void quickSort3Ins(int *A, int l, int r, sortperf_t *s) {
-    const int threshold = 10; // Limite para usar insertion sort
+
+// QuickSort com inserção e mediana de três para partições pequenas
+void quickSort3Ins(int* A, int l, int r, sortperf_t* s) {
     if (l < r) {
-        if (r - l < threshold) {
-            insertionSort(A, l, r, s); // Usa insertion sort para pequenos sub-arrays
+        if (r - l <= 50) {
+            insertionSort(A, l, r, s); // Insertion Sort para pequenas partições
         } else {
             int i, j;
-            partition3(A, l, r, &i, &j, s); // Particiona o array com mediana de três
-            quickSort3Ins(A, l, j, s);      // Ordena a parte esquerda
-            quickSort3Ins(A, j + 1, r, s);  // Ordena a parte direita
+            partition3(A, l, r, &i, &j, s);
+            inccalls(s, 2);
+            quickSort3Ins(A, l, j, s);
+            quickSort3Ins(A, i, r, s);
         }
     }
 }
