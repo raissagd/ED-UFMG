@@ -1,37 +1,37 @@
 #ifndef AVL_TREE_HPP
 #define AVL_TREE_HPP
 
+#include "PageAVLTree.hpp"
 #include <string>
-#include <vector>
 
-struct AVLNode {
+class AVLNode {
+public:
     std::string word;
-    std::vector<int> pages;
     int height;
-    AVLNode *left;
-    AVLNode *right;
+    AVLNode *left, *right;
+    PageAVLTree pagesTree;
 
-    AVLNode(std::string w, int page);
+    AVLNode(const std::string &w, int page);
 };
 
 class AVLTree {
 private:
-    AVLNode *root;
-
-    AVLNode* insert(AVLNode* node, std::string word, int page);
-    AVLNode* rightRotate(AVLNode *y);
-    AVLNode* leftRotate(AVLNode *x);
-    int getHeight(AVLNode *N);
-    void updateHeight(AVLNode *N);
-    int getBalance(AVLNode *N);
-    void inOrder(AVLNode *root);
+    AVLNode* insert(AVLNode* node, const std::string &word, int page);
+    AVLNode* rightRotate(AVLNode* y);
+    AVLNode* leftRotate(AVLNode* x);
+    int getBalance(AVLNode* N);
+    int getHeight(AVLNode* N);
+    void updateHeight(AVLNode* N);
+    void inOrder(AVLNode* node);
+    void freeNode(AVLNode* node);
 
 public:
+    AVLNode* root;
+
     AVLTree();
-    ~AVLTree();
-    void insert(std::string word, int page);
+    ~AVLTree(); // Destructor to free memory
+    void insert(const std::string &word, int page);
     void printInOrder();
-    // Declarar outras funções públicas aqui, se necessário.
 };
 
 #endif // AVL_TREE_HPP
