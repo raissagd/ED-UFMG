@@ -32,35 +32,35 @@ unsigned long long Matrix::get(int row, int col) const {
     return rows[row][col];
 }
 
-IntArray Matrix::multiplyBy1x2(const IntArray& mat1x2) {
-    if (mat1x2.size() != 2) {
-        throw std::invalid_argument("Invalid matrix size for multiplication");
-    }
-    IntArray result;
-    for (int j = 0; j < 2; ++j) {
-        unsigned long long sum = 0;
-        for (int k = 0; k < 2; ++k) {
-            sum += mat1x2[k] * get(k, j);
-        }
-        // Use modulo to keep only the last 8 digits
-        result.push_back(sum % 100000000);
-    }
-    return result;
-}
-
+// In Matrix::multiplyBy2x2
 Matrix Matrix::multiplyBy2x2(const Matrix& other) {
     Matrix result;
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 2; ++j) {
             unsigned long long sum = 0;
             for (int k = 0; k < 2; ++k) {
-                sum += get(i, k) * other.get(k, j);
+                sum = (sum + (this->get(i, k) * other.get(k, j)) % 100000000) % 100000000;
             }
-            // Use modulo to keep only the last 8 digits
-            result.set(i, j, sum % 100000000);
+            result.set(i, j, sum);
         }
     }
-    return result; 
+    return result;
+}
+
+// This function will now multiply a 2x2 matrix by a 2x1 vector.
+IntArray Matrix::multiplyBy2x1(const IntArray& mat2x1) {
+    if (mat2x1.size() != 2) {
+        throw std::invalid_argument("Invalid vector size for multiplication");
+    }
+    IntArray result;
+    for (int i = 0; i < 2; ++i) {
+        unsigned long long sum = 0;
+        for (int j = 0; j < 2; ++j) {
+            sum = (sum + (this->get(i, j) * mat2x1[j]) % 100000000) % 100000000;
+        }
+        result.push_back(sum);
+    }
+    return result;
 }
 
 void Matrix::print() const {
@@ -71,10 +71,9 @@ void Matrix::print() const {
     }
 }
 
-bool Matrix::isDefined() const {
-    // Check if the matrix is the identity matrix
-    return !(rows[0][0] == 1 && rows[0][1] == 0 &&
-             rows[1][0] == 0 && rows[1][1] == 1);
+bool Matrix::isIdentity() const {
+    return rows[0][0] == 1 && rows[0][1] == 0 &&
+           rows[1][0] == 0 && rows[1][1] == 1;
 }
 
 Matrix::Matrix(const Matrix& other) {

@@ -22,19 +22,19 @@ void SegTree::updateTree(int node, int start, int end, int idx, const Matrix& va
         tree[node] = val;
     } else {
         int mid = start + (end - start) / 2;
-        if (idx <= mid) {
-            updateTree(node * 2 + 1, start, mid, idx, val); // Changed to 2 * node + 1
+        if (idx >= start && idx <= mid) {
+            updateTree(node * 2 + 1, start, mid, idx, val);
         } else {
-            updateTree(node * 2 + 2, mid + 1, end, idx, val); // Changed to 2 * node + 2
+            updateTree(node * 2 + 2, mid + 1, end, idx, val);
         }
-        tree[node] = tree[node * 2 + 1].multiplyBy2x2(tree[node * 2 + 2]); // Adjusted indexing for children
+        tree[node] = tree[node * 2 + 1].multiplyBy2x2(tree[node * 2 + 2]);
     }
 }
 
 Matrix SegTree::queryTree(int node, int start, int end, int l, int r) const {
     // No overlap
-    if (start > r || end < l) {
-        return Matrix(); // Return the identity matrix
+    if (r < start || l > end) {
+        return Matrix();  // Return the identity matrix
     }
 
     // Total overlap
@@ -43,18 +43,18 @@ Matrix SegTree::queryTree(int node, int start, int end, int l, int r) const {
     }
 
     // Partial overlap
-    int mid = start + (end - start) / 2;
-    Matrix p1 = queryTree(node * 2 + 1, start, mid, l, r);
-    Matrix p2 = queryTree(node * 2 + 2, mid + 1, end, l, r);
+    int mid = (start + end) / 2;
+    Matrix leftResult = queryTree(node * 2 + 1, start, mid, l, r);
+    Matrix rightResult = queryTree(node * 2 + 2, mid + 1, end, l, r);
 
-    // Multiply the two parts only if they are valid (non-identity) matrices
-    if (!p1.isDefined()) {
-        if (!p2.isDefined()) {
-            return p1.multiplyBy2x2(p2);
-        }
-        return p1;
+    // Combine results from both sides, ensuring non-identity matrices are multiplied in the correct order
+    if (leftResult.isIdentity()) {
+        return rightResult;
+    } else if (rightResult.isIdentity()) {
+        return leftResult;
+    } else {
+        return leftResult.multiplyBy2x2(rightResult);
     }
-    return p2;
 }
 
 

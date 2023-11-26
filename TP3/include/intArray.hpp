@@ -1,4 +1,10 @@
-// IntArray.hpp
+//---------------------------------------------------------------------
+// Arquivo      : graph.cpp
+// Conteudo     : Implementação do grafo
+// Autor        : Raissa Gonçalves Diniz (raissagdiniz@gmail.com)
+// Historico    : 28/10/2023 - arquivo criado
+//---------------------------------------------------------------------
+
 #ifndef INTARRAY_HPP
 #define INTARRAY_HPP
 
