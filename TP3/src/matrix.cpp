@@ -42,7 +42,8 @@ IntArray Matrix::multiplyBy1x2(const IntArray& mat1x2) {
         for (int k = 0; k < 2; ++k) {
             sum += mat1x2[k] * get(k, j);
         }
-        result.push_back(sum);
+        // Use modulo to keep only the last 8 digits
+        result.push_back(sum % 100000000);
     }
     return result;
 }
@@ -51,11 +52,12 @@ Matrix Matrix::multiplyBy2x2(const Matrix& other) {
     Matrix result;
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 2; ++j) {
-            unsigned long long sum = 0; // Changed from int to unsigned long long
+            unsigned long long sum = 0;
             for (int k = 0; k < 2; ++k) {
                 sum += get(i, k) * other.get(k, j);
             }
-            result.set(i, j, sum);
+            // Use modulo to keep only the last 8 digits
+            result.set(i, j, sum % 100000000);
         }
     }
     return result; 
@@ -73,4 +75,17 @@ bool Matrix::isDefined() const {
     // Check if the matrix is the identity matrix
     return !(rows[0][0] == 1 && rows[0][1] == 0 &&
              rows[1][0] == 0 && rows[1][1] == 1);
+}
+
+Matrix::Matrix(const Matrix& other) {
+    rows[0] = other.rows[0];
+    rows[1] = other.rows[1];
+}
+
+Matrix& Matrix::operator=(const Matrix& other) {
+    if (this != &other) {
+        rows[0] = other.rows[0];
+        rows[1] = other.rows[1];
+    }
+    return *this;
 }

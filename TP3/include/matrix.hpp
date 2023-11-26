@@ -18,6 +18,8 @@ public:
     Matrix multiplyBy2x2(const Matrix& other);
     void print() const; 
     bool isDefined() const;
+    Matrix(const Matrix& other);
+    Matrix& operator=(const Matrix& other);
 };
 
 #endif // MATRIX_HPP

@@ -1,75 +1,79 @@
-// SegTree.cpp
 #include "../include/segTree.hpp"
 
-void SegTree::build(int node, int start, int end) {
-    if (start == end) {
-        tree[node] = Matrix(); // Initialize leaf with identity matrix
-    } else {
-        int mid = (start + end) / 2;
-        build(node * 2, start, mid);
-        build(node * 2 + 1, mid + 1, end);
-        tree[node] = tree[node * 2].multiplyBy2x2(tree[node * 2 + 1]); // Combine children
-    }
-}
+SegTree::SegTree(int n) {
+    // Find the smallest power of two greater than or equal to n and calculate the size of the segment tree
+    int x = ceil(log2(n));
+    size = 2 * (int)pow(2, x) - 1;
+    length = n;
+    tree = new Matrix[size];
 
-SegTree::SegTree(int n) : n(n) {
-    int height = (int)(std::ceil(std::log2(n)));
-    int max_size = 2 * (int)std::pow(2, height) - 1;
-    tree = new Matrix[max_size];
-    build(1, 0, n - 1);
+    // Initialize the segment tree with identity matrices
+    for (int i = 0; i < size; ++i) {
+        tree[i] = Matrix(); // Default constructor creates an identity matrix
+    }
 }
 
 SegTree::~SegTree() {
     delete[] tree;
 }
 
-void SegTree::update(int idx, const Matrix& mat) {
-    update(1, 0, n - 1, idx, mat);
+void SegTree::updateTree(int node, int start, int end, int idx, const Matrix& val) {
+    if (start == end) {
+        tree[node] = val;
+    } else {
+        int mid = start + (end - start) / 2;
+        if (idx <= mid) {
+            updateTree(node * 2 + 1, start, mid, idx, val); // Changed to 2 * node + 1
+        } else {
+            updateTree(node * 2 + 2, mid + 1, end, idx, val); // Changed to 2 * node + 2
+        }
+        tree[node] = tree[node * 2 + 1].multiplyBy2x2(tree[node * 2 + 2]); // Adjusted indexing for children
+    }
 }
 
-void SegTree::update(int node, int start, int end, int idx, const Matrix& mat) {
-    if (start == end) {
-        // Atualiza a matriz folha.
-        tree[node] = mat;
-    } else {
-        int mid = (start + end) / 2;
-        if (idx <= mid) {
-            // Se o índice está na metade esquerda, atualize a esquerda.
-            update(node * 2, start, mid, idx, mat);
-        } else {
-            // Se o índice está na metade direita, atualize a direita.
-            update(node * 2 + 1, mid + 1, end, idx, mat);
-        }
-        // Atualiza o nó pai com a nova multiplicação dos filhos.
-        tree[node] = tree[node * 2].multiplyBy2x2(tree[node * 2 + 1]);
+Matrix SegTree::queryTree(int node, int start, int end, int l, int r) const {
+    if (r < start || l > end) {
+        return Matrix(); // Return identity matrix for out-of-range segments
     }
+    if (l <= start && end <= r) {
+        return tree[node];
+    }
+    int mid = start + (end - start) / 2;
+    Matrix p1 = queryTree(node * 2 + 1, start, mid, l, r); // Adjusted indexing for children
+    Matrix p2 = queryTree(node * 2 + 2, mid + 1, end, l, r); // Adjusted indexing for children
+    return p1.multiplyBy2x2(p2); // Return the product of the two parts
+}
+
+void SegTree::update(int idx, const Matrix& val) {
+    updateTree(0, 0, length - 1, idx, val); // Starting from root node at index 0
 }
 
 Matrix SegTree::query(int l, int r) const {
-    return query(1, 0, n - 1, l, r);
+    return queryTree(0, 0, length - 1, l, r); // Starting from root node at index 0
 }
 
-Matrix SegTree::query(int node, int start, int end, int l, int r) const {
-    if (start > r || end < l) {
-        // Retorna uma matriz identidade se o intervalo de consulta não intersecciona com o intervalo do nó.
-        return Matrix();
+void SegTree::printTree() const {
+    int maxNodesAtDepth = 1;
+    int indentSpace = 2;
+    int currentDepth = 0;
+    int nodesAtThisDepth = 0;
+
+    for (int i = 0; i < size; ++i) { // Start from 0
+        if (nodesAtThisDepth == maxNodesAtDepth) {
+            currentDepth++;
+            nodesAtThisDepth = 0;
+            maxNodesAtDepth *= 2;
+            indentSpace /= 2;
+            std::cout << std::endl; // Add a new line for a new level of depth
+        }
+
+        std::cout << std::string(indentSpace, ' '); // Indentation for tree structure
+        std::cout << "Node " << i << " at depth " << currentDepth << ":" << std::endl;
+        tree[i].print(); // Assuming that Matrix::print() is properly formatted
+        nodesAtThisDepth++;
+
+        if (i == maxNodesAtDepth - 2) { // Adjusted check for end of depth
+            std::cout << std::endl; // Separate the levels visually
+        }
     }
-    if (start >= l && end <= r) {
-        // Retorna o nó se o intervalo do nó estiver completamente dentro do intervalo de consulta.
-        return tree[node];
-    }
-    // Se o intervalo do nó se sobrepõe parcialmente com o intervalo de consulta, divida mais.
-    int mid = (start + end) / 2;
-    Matrix p1 = query(node * 2, start, mid, l, r);
-    Matrix p2 = query(node * 2 + 1, mid + 1, end, l, r);
-    
-    // Combina os resultados das duas metades.
-    Matrix result;
-    if (p1.isDefined()) { // Supondo que Matrix tenha um método isDefined para verificar se não é uma matriz identidade.
-        result = result.multiplyBy2x2(p1);
-    }
-    if (p2.isDefined()) { // Similarmente para a segunda metade.
-        result = result.multiplyBy2x2(p2);
-    }
-    return result;
 }

@@ -59,3 +59,15 @@ void IntArray::print() const {
         std::cout << array[i] << (i < length - 1 ? " " : "\n");
     }
 }
+IntArray& IntArray::operator=(const IntArray& other) {
+    if (this != &other) {
+        delete[] array; // Free the existing resource.
+        length = other.length;
+        capacity = other.capacity;
+        array = new unsigned long long[capacity];
+        for (size_t i = 0; i < length; i++) {
+            array[i] = other.array[i];
+        }
+    }
+    return *this;
+}

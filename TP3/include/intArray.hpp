@@ -22,6 +22,7 @@ public:
     size_t size() const;
     void clear();
     void print() const;
+    IntArray& operator=(const IntArray& other);
 };
 
 #endif // INTARRAY_HPP

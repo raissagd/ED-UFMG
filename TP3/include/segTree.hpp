@@ -2,23 +2,24 @@
 #ifndef SEGTREE_HPP
 #define SEGTREE_HPP
 
+#include "matrix.hpp"
 #include <cmath>
-#include "matrix.hpp" // Ensure you include the path to your Matrix class header
 
 class SegTree {
 private:
-    Matrix* tree; // Pointer to array containing the segment tree
-    int n; // Number of leaves, which are the power of 2
+    Matrix* tree; // Array to represent the segment tree
+    int size; // Size of the segment tree array
+    int length; // Number of elements in the original array
 
-    void build(int node, int start, int end);
-    void update(int node, int start, int end, int idx, const Matrix& mat);
-    Matrix query(int node, int start, int end, int l, int r) const;
+    void updateTree(int node, int start, int end, int idx, const Matrix& val);
+    Matrix queryTree(int node, int start, int end, int l, int r) const;
 
 public:
     SegTree(int n);
     ~SegTree();
-    void update(int idx, const Matrix& mat);
+    void update(int idx, const Matrix& val);
     Matrix query(int l, int r) const;
+    void printTree() const;
 };
 
 #endif // SEGTREE_HPP

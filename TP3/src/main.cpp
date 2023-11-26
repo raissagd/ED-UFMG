@@ -7,50 +7,17 @@
 using namespace std;
 
 int main() {
-    // n indicando quantos instantes de tempo
-    // q indicando quantas operações serão realizadas
-    int n, q;
-    cin >> n >> q;
+    // Assuming n is the number of matrices/time instants
+    int n = 4; 
+    SegTree segTree(n);
+    segTree.printTree();
 
-    SegTree segTree(n); // Initialize the segment tree with n leaves
-    
-    char operation;
-    int a, t0, td, x, y;
-    unsigned long long m1, m2, m3, m4;
+    cout << "----------------------------------" << endl;
 
-    while (q != 0) {
-        cin >> operation;
-        if (operation == 'u') {
-            // Update operation
-            // a é o instante que deve ter sua transformação alterada
-            cin >> a;
-            cin >> m1 >> m2;
-            cin >> m3 >> m4;
-            Matrix transform(m1, m2, m3, m4);
-            segTree.update(a, transform);
-        
-            q--;
-        } else if (operation == 'q') {
-            // Query operation
-            // t0 instante de nascimento, td instante de morte  
-            // xy coordenadas do ponto
-            cin >> t0 >> td >> x >> y;
-            IntArray ponto;
-            ponto.push_back(x);
-            ponto.push_back(y);
-            
-            // Perform the query from the segment tree to get the transformated matrix
-            Matrix transformed = segTree.query(t0, td);
-
-            // Multiply the point by the transformation matrix
-            ponto = transformed.multiplyBy1x2(ponto);
-
-            // Print the transformed point
-            cout << ponto[0] % 100000000 << " " << ponto[1] % 100000000 << endl;
-
-            q--;
-        }
-    }
+    // Update the matrix at position 2 (3rd position, 0-indexed) in the tree
+    Matrix newMatrix(1, 2, 3, 4); // The new matrix to replace at index 2
+    segTree.update(2, newMatrix); // Update the tree at index 2 with newMatrix
+    segTree.printTree();
 
     return 0;
 }
