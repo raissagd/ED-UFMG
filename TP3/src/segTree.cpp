@@ -32,17 +32,31 @@ void SegTree::updateTree(int node, int start, int end, int idx, const Matrix& va
 }
 
 Matrix SegTree::queryTree(int node, int start, int end, int l, int r) const {
-    if (r < start || l > end) {
-        return Matrix(); // Return identity matrix for out-of-range segments
+    // No overlap
+    if (start > r || end < l) {
+        return Matrix(); // Return the identity matrix
     }
+
+    // Total overlap
     if (l <= start && end <= r) {
         return tree[node];
     }
+
+    // Partial overlap
     int mid = start + (end - start) / 2;
-    Matrix p1 = queryTree(node * 2 + 1, start, mid, l, r); // Adjusted indexing for children
-    Matrix p2 = queryTree(node * 2 + 2, mid + 1, end, l, r); // Adjusted indexing for children
-    return p1.multiplyBy2x2(p2); // Return the product of the two parts
+    Matrix p1 = queryTree(node * 2 + 1, start, mid, l, r);
+    Matrix p2 = queryTree(node * 2 + 2, mid + 1, end, l, r);
+
+    // Multiply the two parts only if they are valid (non-identity) matrices
+    if (!p1.isDefined()) {
+        if (!p2.isDefined()) {
+            return p1.multiplyBy2x2(p2);
+        }
+        return p1;
+    }
+    return p2;
 }
+
 
 void SegTree::update(int idx, const Matrix& val) {
     updateTree(0, 0, length - 1, idx, val); // Starting from root node at index 0
