@@ -60,9 +60,10 @@ AVLNode* AVLTree::insert(AVLNode* node, std::string word, int page) {
     else if (word > node->word)
         node->right = insert(node->right, word, page);
     else {
-        // A palavra já existe, adiciona a página ao vetor de páginas
-        if (std::find(node->pages.begin(), node->pages.end(), page) == node->pages.end()) {
-            node->pages.push_back(page);
+        // The word already exists, add the page to the vector of pages if it's not already there
+        auto it = std::lower_bound(node->pages.begin(), node->pages.end(), page);
+        if (it == node->pages.end() || *it != page) { // Check if the page is not already in the vector
+            node->pages.insert(it, page); // Insert the page at the correct sorted position
         }
         return node;
     }
