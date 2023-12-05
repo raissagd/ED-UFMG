@@ -22,7 +22,9 @@ especificidades desse problema.
 
 Para representar do grafo a ser analisado, foi utilizada uma lista de adjacências, em que
 cada vértice do grafo possui uma lista associada que armazena seus vizinhos.Exemplo:
+
 ![Alt text](image.png)
+
 Essa estrutura de dados foi escolhida em detrimento à matriz de adjacências, outro método
 comum quando se trata de armazenamento de grafos, pois ela usa espaço proporcional ao
 número de arestas, o que as torna mais eficientes em termos de espaço para grafos
