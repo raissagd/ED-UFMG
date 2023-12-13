@@ -1,6 +1,6 @@
 # Estrutura de dados - UFMG 2023/02
 
-Práticas e trabalhos práticos realizados ao longo dos semestres.
+Práticas e trabalhos práticos realizados ao longo do semestre.
 
 - Trabalhos práticos:
   - TP1: Expressões lógicas e satisfabilidade
